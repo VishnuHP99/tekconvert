@@ -68,13 +68,19 @@ class _UniversalSavedScreenState
     final toUnit = rightParts[1];
 
 
-    Navigator.pop(context, {
-      "categoryKey": categoryKey,
-      "value": value,
-      "fromUnit": fromUnit,
-      "toUnit": toUnit,
-      "result": expression,
-    });
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => UniversalConverterScreen(
+          title: prettyTitle(categoryKey),
+          categoryKey: categoryKey,
+          initialValue: value,
+          initialFromUnit: fromUnit,
+          initialToUnit: toUnit,
+          initialResult: expression,
+        ),
+      ),
+    );
 
 // ✅ ALWAYS refresh after coming back
     loadSaved();
