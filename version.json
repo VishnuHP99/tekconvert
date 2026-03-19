@@ -1,6 +1,6 @@
 {
   "version": "1.0.2",
-  "apk_url": "https://github.com/VishnuHP99/tekconvert/releases/download/v1.0/app-release.apk",
+  "apk_url": "https://github.com/VishnuHP99/tekconvert/releases/download/v1.2/app-release.apk",
   "force_update": true,
   "changelog": "• Improved performance\n• Bug fixes\n• Better UI"
 }
