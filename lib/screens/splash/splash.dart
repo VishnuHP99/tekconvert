@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 //import '../dashboard/dashboard_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tekconvert/services/update_service.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -63,8 +64,9 @@ class _SplashScreenState extends State<SplashScreen>
 
     _ac.repeat(reverse: true);
 
-    Future.delayed(const Duration(seconds: 2), () {
-      _checkTermsAndNavigate();
+    Future.delayed(const Duration(seconds: 2), () async {
+      await UpdateService.checkForUpdate(context);
+      await _checkTermsAndNavigate();
     });
   }
 
