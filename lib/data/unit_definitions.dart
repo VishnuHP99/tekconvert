@@ -341,13 +341,13 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s": "Nm³/h", "f": "normal m³ per hour"},
     {"s": "Nm³/d", "f": "normal m³ per day"},
     {"s": "MNm³/d", "f": "million Nm³ per day"},
-    {"s": "SCFH", "f": "std cubic ft per hour"},
-    {"s": "SCFM", "f": "std cubic ft per minute"},
-    {"s": "Mscf/d", "f": "thousand scf per day"},
-    {"s": "MMscf/d", "f": "million scf per day"},
+    {"s": "scf/h", "f": "std cubic ft/hour"},
+    {"s": "scf/m", "f": "std cubic ft/minute"},
+    {"s": "Mscf/d", "f": "thousand std cubic ft/day"},
+    {"s": "MMscf/d", "f": "million std cubic ft/day"},
     {"s": "Bscf/y", "f": "billion scf per year"},
-    {"s": "SLPM", "f": "std liter per minute"},
-    {"s": "SLPH", "f": "std liter per hour"},
+    {"s": "Sl/m", "f": "std liter per minute"},
+    {"s": "Sl/h", "f": "std liter per hour"},
   ],
 
 
@@ -374,9 +374,9 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 
   // ---------- GAS FLOW ----------
   "gas_flow": [
-    {"s": "MMSCFD", "f": "million std cubic feet/day"},
-    {"s": "SCFD", "f": "std cubic feet/day"},
-    {"s": "SCFM", "f": "std cubic feet/minute"},
+    {"s": "MMscf/d", "f": "million std cubic feet/day"},
+    {"s": "scf/d", "f": "std cubic feet/day"},
+    {"s": "scf/m", "f": "std cubic feet/minute"},
 
     {"s": "Sm³/hr @ 59°F", "f": "std cubic m/hr @ 15°C"},
     {"s": "Nm³/hr @ 32°F", "f": "normal cubic m/hr @ 0°C"},

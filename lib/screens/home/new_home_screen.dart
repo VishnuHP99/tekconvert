@@ -409,7 +409,10 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: theme.dividerColor.withValues(alpha: 0.2),
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.15)
+              : Colors.grey.shade300,
+          width: 0.8,
         ),
         boxShadow: [
           BoxShadow(
@@ -452,13 +455,8 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           ),
 
           if (searchActive)
-            IconButton(
-              icon: Icon(
-                Icons.close,
-                size: 18,
-                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
-              ),
-              onPressed: () {
+            GestureDetector(
+              onTap: () {
                 searchFocus.unfocus();
                 searchCtrl.clear();
                 setState(() {
@@ -467,6 +465,18 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                   filteredSections = homeSections;
                 });
               },
+              child: Container(
+                padding: const EdgeInsets.all(6),
+                decoration: BoxDecoration(
+                  color: Colors.redAccent.withValues(alpha: 0.12), // light red background
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.close,
+                  size: 16,
+                  color: Colors.red, // 👈 red cross
+                ),
+              ),
             ),
         ],
       ),
