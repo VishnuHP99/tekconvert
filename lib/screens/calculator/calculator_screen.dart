@@ -335,7 +335,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 backgroundCursorColor: Colors.grey,
                 style: TextStyle(
                   fontFamily: "Montserrat",
-                  fontSize: 34,
+                  fontSize: 30,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
                 ),
@@ -485,7 +485,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 text,
                 style: TextStyle(
                   fontFamily: "Montserrat",
-                  fontSize: 35,
+                  fontSize: 41,
                   fontWeight: FontWeight.w600,
                   color: txt,
                 ),
@@ -510,4 +510,3 @@ class _LifecycleObserver extends WidgetsBindingObserver {
     }
   }
 }
-

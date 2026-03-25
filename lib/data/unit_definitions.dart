@@ -174,9 +174,18 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s":"psi", "f":"pound per sqr inch"},
     {"s":"kPa", "f":"kilopascal"},
     {"s":"MPa", "f":"megapascal"},
-    {"s":"kgf/cm²", "f":"kilogram-force per cm²"},
-    {"s":"mmHg", "f":"millimeter of mercury"},
+    {"s":"kgf/cm²", "f":"kg-force per cm²"},
+    {"s":"mmHg", "f":"mm of mercury"},
     {"s":"atm", "f":"atmosphere"},
+
+    // ✅ ADDED
+    {"s":"hPa", "f":"hectopascal"},
+    {"s":"mbar", "f":"millibar"},
+    {"s":"ksi", "f":"kilopound per square inch"},
+    {"s":"psf", "f":"pound per square foot"},
+    {"s":"kgf/m²", "f":"kilogram-force per square meter"},
+    {"s":"N/m²", "f":"newton per square meter"},
+    {"s":"at", "f":"technical atmosphere"},
   ],
 
 // ---------- PRESSURE LOW ----------
@@ -187,6 +196,11 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s":"inHg", "f":"inch of mercury"},
     {"s":"in H₂O", "f":"inch of water"},
     {"s":"Pa", "f":"pascal"},
+
+    // ✅ ADDED
+    {"s":"cm H₂O", "f":"centimeter of water"},
+    {"s":"mmHg", "f":"millimeter of mercury"},
+    {"s":"torr", "f":"torr"},
   ],
 
 // ---------- PRESSURE DELTA ----------
@@ -199,6 +213,17 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s":"atm", "f":"atmosphere"},
     {"s":"kg/cm²", "f":"kg-force per cm²"},
     {"s":"m H₂O", "f":"meter of water"},
+
+    // ✅ ADDED
+    {"s":"hPa", "f":"hectopascal"},
+    {"s":"cm H₂O", "f":"centimeter of water"},
+    {"s":"ft H₂O", "f":"foot of water"},
+    {"s":"mmHg", "f":"millimeter of mercury"},
+    {"s":"torr", "f":"torr"},
+    {"s":"psf", "f":"pound per square foot"},
+    {"s":"kgf/m²", "f":"kilogram-force per square meter"},
+    {"s":"N/m²", "f":"newton per square meter"},
+    {"s":"at", "f":"technical atmosphere"},
   ],
 
 // ---------- FORCE ----------
@@ -345,6 +370,20 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s": "ft³/h", "f": "cubic ft per hour"},
     {"s": "gal/min", "f": "gallon per minute (US)"},
     {"s": "bbl/d", "f": "barrel per day (US oil)"},
+  ],
+
+  // ---------- GAS FLOW ----------
+  "gas_flow": [
+    {"s": "MMSCFD", "f": "million std cubic feet/day"},
+    {"s": "SCFD", "f": "std cubic feet/day"},
+    {"s": "SCFM", "f": "std cubic feet/minute"},
+
+    {"s": "Sm³/hr @ 59°F", "f": "std cubic m/hr @ 15°C"},
+    {"s": "Nm³/hr @ 32°F", "f": "normal cubic m/hr @ 0°C"},
+
+    {"s": "MSm³/d @ 59°F", "f": "million std cubic m/day @ 15°C"},
+    {"s": "MSm³/hr @ 59°F", "f": "million std cubic m/hr @ 15°C"},
+
   ],
 
   // ================= HEAT TRANSER =================

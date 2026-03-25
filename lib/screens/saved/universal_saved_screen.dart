@@ -39,9 +39,17 @@ class _UniversalSavedScreenState
   }
 
   String prettyTitle(String key) {
+    // If already all uppercase (like CGR), return as-is
+    if (key.toUpperCase() == key) {
+      return key;
+    }
+
+    // Otherwise format normally
     return key
         .split("_")
-        .map((w) => w[0].toUpperCase() + w.substring(1))
+        .map((w) => w.isEmpty
+        ? w
+        : w[0].toUpperCase() + w.substring(1).toLowerCase())
         .join(" ");
   }
 
@@ -68,7 +76,7 @@ class _UniversalSavedScreenState
     final toUnit = rightParts[1];
 
 
-    Navigator.push(
+    Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (_) => UniversalConverterScreen(
@@ -80,6 +88,7 @@ class _UniversalSavedScreenState
           initialResult: expression,
         ),
       ),
+          (route) => route.isFirst,
     );
 
 // ✅ ALWAYS refresh after coming back

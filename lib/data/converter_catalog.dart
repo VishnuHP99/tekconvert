@@ -60,6 +60,10 @@ const Map<String, List<String>> converterCatalog = {
     "volume_rate_liquid",
   ],
 
+  "Gas Flow": [
+    "gas_flow",
+  ],
+
   "Heat Transfer": [
     "heat_transfer",
   ],

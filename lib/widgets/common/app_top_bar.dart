@@ -30,6 +30,8 @@ class AppTopBar extends StatefulWidget {
 
 class _AppTopBarState extends State<AppTopBar> {
 
+  String? _currentRouteName;
+
   //DateTime? _lastTapTime;
 
 
@@ -67,6 +69,7 @@ class _AppTopBarState extends State<AppTopBar> {
 
   @override
   Widget build(BuildContext context) {
+    _currentRouteName = ModalRoute.of(context)?.settings.name;
     return SafeArea(
       bottom: false,
       child: Column(
@@ -128,16 +131,17 @@ class _AppTopBarState extends State<AppTopBar> {
                 IconButton(
                   icon: const Icon(CupertinoIcons.bookmark),
                   onPressed: () {
-                    UISound.tap();   // 🔊 tap sound
-                    if (ModalRoute.of(context)?.settings.name == "/saved") {
-                      return; // already on saved
-                    }
+                    if (_currentRouteName == "saved") return;
 
-                    Navigator.push(
+                    UISound.tap();
+
+                    Navigator.pushAndRemoveUntil(
                       context,
                       CupertinoPageRoute(
                         builder: (_) => const UniversalSavedScreen(),
+                        settings: const RouteSettings(name: "saved"),
                       ),
+                          (route) => route.settings.name != "saved",
                     );
                   },
                 ),
@@ -148,16 +152,17 @@ class _AppTopBarState extends State<AppTopBar> {
                 IconButton(
                   icon: const Icon(CupertinoIcons.settings),
                   onPressed: () async {
-                    UISound.tap();   // 🔊 tap sound
-                    if (ModalRoute.of(context)?.settings.name == "/settings") {
-                      return; // already on settings
-                    }
+                    if (_currentRouteName == "settings") return;
 
-                    final changed = await Navigator.push(
+                    UISound.tap();
+
+                    final changed = await Navigator.pushAndRemoveUntil(
                       context,
                       CupertinoPageRoute(
                         builder: (_) => const SettingsScreen(),
+                        settings: const RouteSettings(name: "settings"),
                       ),
+                          (route) => route.settings.name != "settings",
                     );
 
                     if (changed == true) {

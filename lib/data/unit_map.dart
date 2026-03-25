@@ -180,6 +180,15 @@ final Map<String, Map<String, double>> unitMap = {
     "kgf/cm²": 98066.5,
     "mmHg": 133.322368,
     "atm": 101325,
+
+    // ✅ ADDED
+    "hPa": 100,
+    "mbar": 100,
+    "ksi": 6894757.293,
+    "psf": 47.880258,
+    "kgf/m²": 9.80665,
+    "N/m²": 1,
+    "at": 98066.5,
   },
 
 // ================= PRESSURE LOW =================
@@ -190,6 +199,11 @@ final Map<String, Map<String, double>> unitMap = {
     "inHg": 3386.388158,
     "in H₂O": 249.08891,
     "Pa": 1,
+
+    // ✅ ADDED
+    "cm H₂O": 98.0665,
+    "mmHg": 133.322368,
+    "torr": 133.322368,
   },
 
 // ================= PRESSURE DELTA =================
@@ -202,6 +216,17 @@ final Map<String, Map<String, double>> unitMap = {
     "atm": 101325,
     "kg/cm²": 98066.5,
     "m H₂O": 9806.65,
+
+    // ✅ ADDED
+    "hPa": 100,
+    "cm H₂O": 98.0665,
+    "ft H₂O": 2989.06692,
+    "mmHg": 133.322368,
+    "torr": 133.322368,
+    "psf": 47.880258,
+    "kgf/m²": 9.80665,
+    "N/m²": 1,
+    "at": 98066.5,
   },
 
 // ================= FORCE =================
@@ -360,6 +385,29 @@ final Map<String, Map<String, double>> unitMap = {
     "ft³/h": 0.028316846592 / 3600,
     "gal/min": 0.003785411784 / 60,
     "bbl/d": 0.158987294928 / 86400,
+  },
+
+// ================= GAS FLOW =================
+// Base: m³/s (standard conditions)
+  "gas_flow": {
+
+    // ----- METRIC STANDARD -----
+    "Sm³/hr @ 59°F": 1 / 3600,
+    "MSm³/hr @ 59°F": 1e6 / 3600,
+    "MSm³/d @ 59°F": 1e6 / 86400,
+
+    // ----- NORMAL -----
+    // Nm³ → Sm³ using temperature ratio
+    "Nm³/hr @ 32°F": (273.15 / 288.15) / 3600,
+
+    // ----- SCF SYSTEM -----
+    // 1 SCF = 0.028316846592 m³
+    "SCFM": 0.028316846592 / 60,
+    "SCFD": 0.028316846592 / 86400,
+    "MMSCFD": (1e6 * 0.028316846592) / 86400,
+
+    // ❌ REMOVE THIS (cannot be in same map)
+    // "MMBtu/day": ❌
   },
 
   // ================= Heat Transfer =================

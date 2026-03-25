@@ -32,6 +32,8 @@ class UpdateService {
             apkUrl,
             forceUpdate,
             changelog,
+            currentVersion,
+            latestVersion,
           );
         }
       }
@@ -45,6 +47,8 @@ class UpdateService {
       String apkUrl,
       bool forceUpdate,
       String changelog,
+      String currentVersion,
+      String latestVersion,
       ) {
     return showModalBottomSheet(
       context: context,
@@ -55,6 +59,8 @@ class UpdateService {
           apkUrl: apkUrl,
           forceUpdate: forceUpdate,
           changelog: changelog,
+          currentVersion: currentVersion,
+          latestVersion: latestVersion,
         );
       },
     );
@@ -65,11 +71,15 @@ class _PremiumUpdateSheet extends StatefulWidget {
   final String apkUrl;
   final bool forceUpdate;
   final String changelog;
+  final String currentVersion;
+  final String latestVersion;
 
   const _PremiumUpdateSheet({
     required this.apkUrl,
     required this.forceUpdate,
     required this.changelog,
+    required this.currentVersion,
+    required this.latestVersion,
   });
 
   @override
@@ -77,7 +87,8 @@ class _PremiumUpdateSheet extends StatefulWidget {
       _PremiumUpdateSheetState();
 }
 
-class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet> {
+class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet>
+    with SingleTickerProviderStateMixin {
   double progress = 0;
   bool downloading = false;
 
@@ -108,16 +119,18 @@ class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
+        color: theme.cardColor.withValues(alpha: 0.98),
         borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 25,
             offset: const Offset(0, 15),
           ),
@@ -126,22 +139,49 @@ class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // iOS style handle
-          Container(
-            width: 40,
-            height: 5,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade400,
-              borderRadius: BorderRadius.circular(10),
-            ),
+
+          /// TOP BAR
+          Stack(
+            children: [
+
+              /// CENTER HANDLE
+              Center(
+                child: Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+
+              /// TOP RIGHT CLOSE BUTTON
+              if (!widget.forceUpdate)
+                Positioned(
+                  right: 0,
+                  child: GestureDetector(
+                    onTap: () => Navigator.pop(context),
+                    behavior: HitTestBehavior.opaque,
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.05),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(Icons.close, size: 18),
+                    ),
+                  ),
+                ),
+            ],
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 18),
 
           const Icon(
             Icons.system_update,
-            size: 40,
-            color: Color(0xFF53CBF3),
+            size: 42,
+            color: Color(0xFF007AFF),
           ),
 
           const SizedBox(height: 12),
@@ -154,7 +194,19 @@ class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet> {
             ),
           ),
 
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
+
+          /// VERSION DISPLAY
+          Text(
+            "v${widget.currentVersion} → v${widget.latestVersion}",
+            style: TextStyle(
+              fontSize: 13,
+              color: theme.colorScheme.primary,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+
+          const SizedBox(height: 10),
 
           Text(
             widget.changelog,
@@ -165,27 +217,70 @@ class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet> {
             ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 22),
 
-          if (downloading) ...[
-            LinearProgressIndicator(value: progress),
-            const SizedBox(height: 8),
-            Text("${(progress * 100).toStringAsFixed(0)}%"),
-          ] else ...[
-            SizedBox(
+          /// BUTTON / PROGRESS MORPH
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 300),
+            child: downloading
+                ? Column(
+              key: const ValueKey("progress"),
+              children: [
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0, end: progress),
+                    duration: const Duration(milliseconds: 300),
+                    builder: (context, value, _) {
+                      return LinearProgressIndicator(
+                        value: value,
+                        minHeight: 6,
+                        backgroundColor:
+                        Colors.grey.withValues(alpha: 0.2),
+                        color: const Color(0xFF007AFF),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Text(
+                  "${(progress * 100).toStringAsFixed(0)}%",
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            )
+                : SizedBox(
+              key: const ValueKey("button"),
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFD7DCE1),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                  elevation: 0,
+                ),
                 onPressed: downloadAndInstall,
-                child: const Text("Download & Install"),
+                child: const Text(
+                  "Download & Install",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ),
-          ],
+          ),
 
           if (!widget.forceUpdate && !downloading)
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Later"),
+              child: const Text(
+                "Not Now",
+                style: TextStyle(fontWeight: FontWeight.w500),
+              ),
             ),
         ],
       ),

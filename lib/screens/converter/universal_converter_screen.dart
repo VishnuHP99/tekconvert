@@ -579,7 +579,7 @@ class _UniversalConverterScreenState
               child: Text(
                 text,
                 style: const TextStyle(
-                  fontSize: 32,
+                  fontSize: 35,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1061,11 +1061,6 @@ class _UniversalConverterScreenState
     await checkIfSaved(row);
 
   }
-
-
-
-
-
 
   Widget toolIcon(IconData icon) =>
       Expanded(child: Center(child: Icon(icon)));

@@ -89,6 +89,14 @@ final List<HomeSection> homeSections = [
     HomeTile("Surface Tension","surface_tension","assets/images/homeIcons/pressureForce/surfaceTension.png"),
   ]),
 
+  HomeSection("Volume & Gas Flow", [
+    HomeTile("Volume","volume","assets/images/homeIcons/volume/Volume.png"),
+    HomeTile("Volume Rate Std","volume_rate_std","assets/images/homeIcons/volume/volumeRateStd.png"),
+    HomeTile("Volume Rate Actual","volume_rate_actual","assets/images/homeIcons/volume/volumeRateAct.png"),
+    HomeTile("Volume Rate Liquid","volume_rate_liquid","assets/images/homeIcons/volume/volumeRateLiq.png"),
+    HomeTile("Gas Flow","gas_flow","assets/images/homeIcons/volume/gasFlow.png")
+  ]),
+
   HomeSection("Fluid Ratios", [
     HomeTile("CGR","cgr","assets/images/homeIcons/fluidRatios/CGR.png"),
     HomeTile("GLR","glr","assets/images/homeIcons/fluidRatios/GLR.png"),
@@ -104,13 +112,6 @@ final List<HomeSection> homeSections = [
   HomeSection("Viscosity", [
     HomeTile("Dynamic Viscosity","viscosity_dynamic","assets/images/homeIcons/viscosity/dynamicViscosity.png"),
     HomeTile("Kinematic Viscosity","viscosity_kinematic","assets/images/homeIcons/viscosity/kinematicViscosity.png"),
-  ]),
-
-  HomeSection("Volume", [
-    HomeTile("Volume","volume","assets/images/homeIcons/volume/Volume.png"),
-    HomeTile("Volume Rate Std","volume_rate_std","assets/images/homeIcons/volume/volumeRateStd.png"),
-    HomeTile("Volume Rate Actual","volume_rate_actual","assets/images/homeIcons/volume/volumeRateAct.png"),
-    HomeTile("Volume Rate Liquid","volume_rate_liquid","assets/images/homeIcons/volume/volumeRateLiq.png"),
   ]),
 
   HomeSection("Power & Heat Transfer", [
@@ -146,6 +147,16 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
   bool searchActive = false;
   late List<HomeSection> filteredSections;
+  String getCategoryTitle(String key) {
+    for (final section in homeSections) {
+      for (final tile in section.tiles) {
+        if (tile.key == key) {
+          return tile.title;
+        }
+      }
+    }
+    return key;
+  }
 
   @override
   void initState() {
@@ -182,10 +193,29 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
       final q = text.toLowerCase();
 
-      final matches = allUnitSuggestions.where((u) =>
-      u.symbol.toLowerCase().startsWith(q) ||
-          u.name.toLowerCase().contains(q)
-      ).take(12).toList();
+      final exact = <UnitSuggestion>[];
+      final starts = <UnitSuggestion>[];
+      final contains = <UnitSuggestion>[];
+
+      for (final u in allUnitSuggestions) {
+        final name = u.name.toLowerCase();
+        final symbol = u.symbol.toLowerCase();
+
+        if (name == q || symbol == q) {
+          exact.add(u);
+        } else if (symbol.startsWith(q) || name.startsWith(q)) {
+          starts.add(u);
+        } else if (name.contains(q)) {
+          contains.add(u);
+        }
+      }
+
+// Combine in priority order
+      final matches = [
+        ...exact,
+        ...starts,
+        ...contains,
+      ].take(40).toList();
 
       setState(() {
         suggestions = matches;
@@ -379,7 +409,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(28),
         border: Border.all(
-          color: theme.dividerColor.withOpacity(0.2),
+          color: theme.dividerColor.withValues(alpha: 0.2),
         ),
         boxShadow: [
           BoxShadow(
@@ -395,7 +425,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           Icon(
             Icons.search,
             size: 20,
-            color: theme.colorScheme.onSurface.withOpacity(0.65),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.65),
           ),
 
           const SizedBox(width: 10),
@@ -413,7 +443,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
               decoration: InputDecoration(
                 hintText: "Search units and categories",
                 hintStyle: TextStyle(
-                  color: theme.colorScheme.onSurface.withOpacity(0.5),
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 ),
                 border: InputBorder.none,
                 isCollapsed: true,
@@ -426,7 +456,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
               icon: Icon(
                 Icons.close,
                 size: 18,
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
               onPressed: () {
                 searchFocus.unfocus();
@@ -455,7 +485,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         color: theme.cardColor,
         borderRadius: BorderRadius.circular(18),
         border: Border.all(
-          color: theme.dividerColor.withOpacity(0.15),
+          color: theme.dividerColor.withValues(alpha: 0.15),
         ),
         boxShadow: [
           BoxShadow(
@@ -465,9 +495,15 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           )
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(
+          maxHeight: 320, // 👈 control height here
+        ),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
 
           if (recent.isNotEmpty)
             header("Recently Searched", clear: true),
@@ -480,6 +516,8 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
           ...suggestions.map(suggestionRow),
         ],
       ),
+    ),
+    ),
     );
   }
 
@@ -495,7 +533,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w600,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
           ),
           const Spacer(),
@@ -514,12 +552,25 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
     return ListTile(
       dense: true,
-      title: Text(
-        u.name,
-        style: TextStyle(
-          color: theme.colorScheme.onSurface,
+        title: RichText(
+          text: TextSpan(
+            text: u.name,
+            style: TextStyle(
+              color: theme.colorScheme.onSurface,
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
+            ),
+            children: [
+              TextSpan(
+                text: "  •  ${getCategoryTitle(u.categoryKey)}",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -534,7 +585,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             icon: Icon(
               Icons.close,
               size: 16,
-              color: theme.colorScheme.onSurface.withOpacity(0.6),
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
             ),
             onPressed: () {
               setState(() => recent.remove(u));
@@ -561,13 +612,26 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
     return ListTile(
       dense: true,
-      title: Text(
-        u.name,
-        style: TextStyle(
-          color: theme.colorScheme.onSurface,
-          fontWeight: FontWeight.w500,
+        title: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              u.name,
+              style: TextStyle(
+                color: theme.colorScheme.onSurface,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 2),
+            Text(
+              getCategoryTitle(u.categoryKey),
+              style: TextStyle(
+                fontSize: 11,
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+              ),
+            ),
+          ],
         ),
-      ),
       trailing: Text(
         u.symbol,
         style: TextStyle(
