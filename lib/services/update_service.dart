@@ -121,10 +121,17 @@ class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet>
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    return AnimatedContainer(
+    return SafeArea(
+      top: false,
+      child: AnimatedContainer(
       duration: const Duration(milliseconds: 400),
       margin: const EdgeInsets.all(16),
-      padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
+        padding: EdgeInsets.fromLTRB(
+          20,
+          20,
+          20,
+          16 + MediaQuery.of(context).viewPadding.bottom,
+        ),
       decoration: BoxDecoration(
         color: theme.cardColor.withValues(alpha: 0.98),
         borderRadius: BorderRadius.circular(28),
@@ -166,7 +173,7 @@ class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet>
                     child: Container(
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.05),
+                        color: Colors.black.withValues(alpha: 0.05),
                         shape: BoxShape.circle,
                       ),
                       child: const Icon(Icons.close, size: 18),
@@ -284,6 +291,7 @@ class _PremiumUpdateSheetState extends State<_PremiumUpdateSheet>
             ),
         ],
       ),
+    ),
     );
   }
 }

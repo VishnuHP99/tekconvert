@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tekconvert/screens/settings/privacy_policy_screen.dart';
@@ -19,6 +20,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
 
+  String appVersion = "";
   bool soundEnabled = true;
   int decimalPlaces = AppSettings.decimalPlaces;
   bool scientificEnabled = AppSettings.scientificEnabled;
@@ -27,6 +29,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
   void initState() {
     super.initState();
     loadSettings();
+    loadAppVersion();
   }
 
   Future<void> loadSettings() async {
@@ -136,7 +139,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 settingsGroup([
                   simpleTile(
                     title: "Version",
-                    subtitle: "1.0.0",
+                    subtitle: appVersion,
                   ),
 
                   simpleTile(
@@ -464,5 +467,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
         );
       },
     );
+  }
+  Future<void> loadAppVersion() async {
+    final info = await PackageInfo.fromPlatform();
+
+    setState(() {
+      appVersion = info.version; // 👈 this gives 1.0.2
+    });
   }
 }
