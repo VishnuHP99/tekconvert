@@ -387,27 +387,24 @@ final Map<String, Map<String, double>> unitMap = {
     "bbl/d": 0.158987294928 / 86400,
   },
 
-// ================= GAS FLOW =================
-// Base: m³/s (standard conditions)
+/// ================= GAS FLOW =================
+// Base: Sm³/s (standard at 15°C / 59°F)
+
   "gas_flow": {
 
-    // ----- METRIC STANDARD -----
+    // ----- STANDARD METRIC (15°C / 59°F) -----
     "Sm³/hr @ 59°F": 1 / 3600,
     "MSm³/hr @ 59°F": 1e6 / 3600,
     "MSm³/d @ 59°F": 1e6 / 86400,
 
-    // ----- NORMAL -----
-    // Nm³ → Sm³ using temperature ratio
+    // ----- NORMAL METRIC (0°C / 32°F) -----
+    // Convert Nm³ → Sm³ using T ratio
     "Nm³/hr @ 32°F": (273.15 / 288.15) / 3600,
 
-    // ----- SCF SYSTEM -----
-    // 1 SCF = 0.028316846592 m³
+    // ----- SCF SYSTEM (based on 60°F ≈ 15.56°C close to 59°F) -----
     "scf/m": 0.028316846592 / 60,
     "scf/d": 0.028316846592 / 86400,
     "MMscf/d": (1e6 * 0.028316846592) / 86400,
-
-    // ❌ REMOVE THIS (cannot be in same map)
-    // "MMBtu/day": ❌
   },
 
   // ================= Heat Transfer =================

@@ -14,6 +14,11 @@ double convertValue({
     return _convertTemperature(value, fromUnit, toUnit);
   }
 
+  // ---------- PRESSURE (FIXED) ----------
+  if (category.toLowerCase() == "pressure") {
+    return _convertPressure(value, fromUnit, toUnit);
+  }
+
   // ---------- GENERIC FACTOR BASED ----------
   final categoryMap = unitMap[category];
 
@@ -59,5 +64,37 @@ double _convertTemperature(double v, String from, String to) {
   if (to == "°F") return (kelvin - 273.15) * 9 / 5 + 32;
   if (to == "°R") return kelvin * 9 / 5;
   return kelvin;
+}
+
+// pressure conversion
+double _convertPressure(double value, String fromUnit, String toUnit) {
+  const double atm = 101325.0;
+
+  final factors = unitMap["pressure"]!;
+
+  bool isGauge(String u) => u.contains("(G)") || u.endsWith("g");
+
+  // ---------------------------
+  // 1. Convert → Pa (ABSOLUTE)
+  // ---------------------------
+  double pa = value * factors[fromUnit]!;
+
+  if (isGauge(fromUnit)) {
+    pa += atm;
+  }
+
+  // ---------------------------
+  // 2. Convert Pa → target
+  // ---------------------------
+  double result = pa / factors[toUnit]!;
+
+  // ---------------------------
+  // 3. Apply gauge correction
+  // ---------------------------
+  if (isGauge(toUnit)) {
+    result -= atm / factors[toUnit]!;
+  }
+
+  return result;
 }
 

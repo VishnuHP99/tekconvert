@@ -16,12 +16,14 @@ class CalculatorScreen extends StatefulWidget {
 class _CalculatorScreenState extends State<CalculatorScreen> {
 
 
+  String rawExpression = "";
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
 
   String previewResult = "";
   List<String> history = [];
+
 
 
   // ================= INIT =================
@@ -60,10 +62,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
   Future<void> loadDecimalSetting() async {
-    final prefs = await SharedPreferences.getInstance();
-
-
-
 
     // 🔁 Recalculate preview if expression exists
     if (_controller.text.isNotEmpty && _hasOperator(_controller.text)) {
@@ -95,11 +93,6 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
         s.contains('%');
   }
 
-
-
-
-
-
   bool isOperator(String s) {
     return ["+", "-", "x", "/", "%"].contains(s);
   }
@@ -111,24 +104,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   // ================= INSERT AT CURSOR =================
   void insertText(String text) {
-    final value = _controller.value;
+    final value = rawExpression;
 
-    final newText = value.text.replaceRange(
-      value.selection.start,
-      value.selection.end,
-      text,
-    );
+    rawExpression = value + text;
 
-    final newCursor = value.selection.start + text.length;
+    _controller.text = formatExpression(rawExpression);
+    _controller.selection =
+        TextSelection.collapsed(offset: _controller.text.length);
 
-    _controller.value = TextEditingValue(
-      text: newText,
-      selection: TextSelection.collapsed(offset: newCursor),
-    );
-
-    updatePreview();
+    updatePreview(); // ✅ ALWAYS call
   }
-
   // ================= BUTTON TAP =================
   void onTap(String v) {
 
@@ -138,6 +123,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     // ---------- CLEAR ----------
     if (v == "AC") {
+      rawExpression = "";   // 🔥 IMPORTANT
       _controller.clear();
       previewResult = "";
       setState(() {});
@@ -146,14 +132,23 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     // ---------- BACKSPACE ----------
     if (v == "⌫") {
-      final sel = _controller.selection;
-      if (sel.start > 0) {
-        final text = _controller.text;
-        _controller.text =
-            text.replaceRange(sel.start - 1, sel.start, "");
+      final selection = _controller.selection;
+
+      if (rawExpression.isNotEmpty && selection.start > 0) {
+        int cursorPos = selection.start;
+
+        // remove character before cursor
+        rawExpression =
+            rawExpression.substring(0, cursorPos - 1) +
+                rawExpression.substring(cursorPos);
+
+        _controller.text = formatExpression(rawExpression);
+
+        // move cursor correctly
         _controller.selection =
-            TextSelection.collapsed(offset: sel.start - 1);
+            TextSelection.collapsed(offset: cursorPos - 1);
       }
+
       updatePreview();
       return;
     }
@@ -184,7 +179,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   void handleSmartInsert(String v) {
 
-    final text = _controller.text;
+    final text = rawExpression;
 
     if (text.isEmpty) {
       if (isOperator(v)) return;   // block starting with operator
@@ -196,10 +191,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     // ---------- Prevent operator spam ----------
     if (isOperator(last) && isOperator(v)) {
-      _controller.text =
+      rawExpression =
           text.substring(0, text.length - 1) + v;
+
+      _controller.text = formatExpression(rawExpression);
       _controller.selection =
           TextSelection.collapsed(offset: _controller.text.length);
+
       updatePreview();
       return;
     }
@@ -213,6 +211,12 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       insertText("x$v");
       return;
     }
+    // ---------- Decimal after bracket ----------
+// ) . → )x0.
+    if (last == ")" && v == ".") {
+      insertText("x0.");
+      return;
+    }
 
     insertText(v);
   }
@@ -221,7 +225,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
   // ================= CALCULATE =================
   void calculate() {
-    final text = _controller.text;
+    final text = rawExpression;
 
     if (text.isEmpty || !_hasOperator(text)) return;
 
@@ -229,15 +233,17 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     if (isOperator(last)) return;
 
     try {
-      String exp = text.replaceAll("x", "*");
+      // 🔥 remove commas before parsing
+      String exp = text.replaceAll(",", "").replaceAll("x", "*");
+
       Parser p = Parser();
       Expression ex = p.parse(exp);
 
       double res =
       ex.evaluate(EvaluationType.REAL, ContextModel());
 
+      // ✅ format result WITH commas
       String formatted = AppSettings.format(res);
-
 
       history.insert(0, "$text = $formatted");
       if (history.length > 5) history.removeLast();
@@ -249,18 +255,22 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
       previewResult = "";
       setState(() {});
+      rawExpression = res.toString();  // 🔥 CRITICAL
     } catch (_) {
       _controller.text = "Error";
       previewResult = "";
       setState(() {});
+
     }
+
   }
+
 
 
   // ================= PREVIEW =================
   void updatePreview() {
     try {
-      final text = _controller.text;
+      final text = rawExpression;
 
       if (text.isEmpty || !_hasOperator(text)) {
         previewResult = "";
@@ -270,12 +280,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
       String last = text[text.length - 1];
       if (isOperator(last)) {
-        previewResult = "";
-        setState(() {});
-        return;
+        return; // ❌ don’t clear, just skip calculation
       }
 
-      String exp = text.replaceAll("x", "*");
+      String exp = text.replaceAll(",", "").replaceAll("x", "*");
       Parser p = Parser();
       Expression ex = p.parse(exp);
 
@@ -298,9 +306,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final numBg = isDark ? const Color(0xFF2C2C2E) : const Color(0xFFE8EBF0);
-    final opBg  = isDark ? const Color(0xFF1F3B5B) : const Color(0xFFD7ECFF);
-    final acBg  = isDark ? const Color(0xFF4A2C2C) : const Color(0xFFFFEBEB);
+
 
     final displayBg = isDark ? const Color(0xFF1C1C1E) : const Color(0xFFF6F9FA);
     final borderColor = isDark ? const Color(0xFF2C2C2E) : const Color(0xFFC7C2C2);
@@ -335,7 +341,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 backgroundCursorColor: Colors.grey,
                 style: TextStyle(
                   fontFamily: "Montserrat",
-                  fontSize: 30,
+                  fontSize: 29,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
                 ),
@@ -347,7 +353,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 previewResult,
                 style: TextStyle(
                   fontFamily: "Montserrat",
-                  fontSize: 21,
+                  fontSize: 22,
                   fontWeight: FontWeight.w600,
                   color: textSecondary,
                 ),
@@ -485,7 +491,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 text,
                 style: TextStyle(
                   fontFamily: "Montserrat",
-                  fontSize: 41,
+                  fontSize: 40,
                   fontWeight: FontWeight.w600,
                   color: txt,
                 ),
@@ -509,4 +515,19 @@ class _LifecycleObserver extends WidgetsBindingObserver {
       onResume();
     }
   }
+}
+String formatExpression(String input) {
+  return input.replaceAllMapped(
+    RegExp(r'\d+\.?\d*'),
+        (match) {
+      final numStr = match.group(0)!;
+
+      if (numStr.endsWith(".")) return numStr;
+
+      final numVal = double.tryParse(numStr);
+      if (numVal == null) return numStr;
+
+      return AppSettings.format(numVal);
+    },
+  );
 }

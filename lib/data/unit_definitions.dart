@@ -158,13 +158,13 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s":"kPa (A)", "f":"kilopascal absolute"},
     {"s":"MPa (A)", "f":"megapascal absolute"},
     {"s":"bara", "f":"bar absolute"},
-    {"s":"psia", "f":"psi absolute"},
+    {"s":"psia", "f":"pounds/sqr inch absolute"},
     {"s":"atm (A)", "f":"atmosphere absolute"},
     {"s":"kg/cm² (A)", "f":"kg-force per cm² absolute"},
     {"s":"kPa (G)", "f":"kilopascal gauge"},
     {"s":"MPa (G)", "f":"megapascal gauge"},
     {"s":"barg", "f":"bar gauge"},
-    {"s":"psig", "f":"psi gauge"},
+    {"s":"psig", "f":"pounds/sqr inch gauge"},
     {"s":"atm (G)", "f":"atmosphere gauge"},
   ],
 
@@ -375,15 +375,14 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
   // ---------- GAS FLOW ----------
   "gas_flow": [
     {"s": "MMscf/d", "f": "million std cubic feet/day"},
-    {"s": "scf/d", "f": "std cubic feet/day"},
-    {"s": "scf/m", "f": "std cubic feet/minute"},
+    {"s": "scf/d", "f": "std cubic ft/day"},
+    {"s": "scf/m", "f": "std cubic ft/minute"},
 
     {"s": "Sm³/hr @ 59°F", "f": "std cubic m/hr @ 15°C"},
     {"s": "Nm³/hr @ 32°F", "f": "normal cubic m/hr @ 0°C"},
 
     {"s": "MSm³/d @ 59°F", "f": "million std cubic m/day @ 15°C"},
-    {"s": "MSm³/hr @ 59°F", "f": "million std cubic m/hr @ 15°C"},
-
+    {"s": "MSm³/hr @ 59°F", "f": "million std cubic m/hr @ 15°C"}
   ],
 
   // ================= HEAT TRANSER =================
