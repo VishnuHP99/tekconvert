@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../calculator/calculator_screen.dart';
 import '../../widgets/common/bottom_nav_bar.dart';
 import '../../widgets/common/app_top_bar.dart';
-import '../tools/screens/tools_screen.dart';
+
 
 import '../home/new_home_screen.dart';
 
@@ -22,7 +22,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final pages = <Widget>[
     const NewHomeScreen(),
     const CalculatorScreen(),
-    const ToolsScreen(),
   ];
 
 

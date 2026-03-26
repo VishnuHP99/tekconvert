@@ -630,11 +630,33 @@ class _UniversalConverterScreenState
       }
 
       if (k == "⌫") {
-        if (inputController.text.isNotEmpty) {
-          inputController.text =
-              inputController.text.substring(
-                  0, inputController.text.length - 1);
+        final text = inputController.text;
+
+        // 🔥 Fix invalid cursor (very important)
+        final selection = inputController.selection.start < 0
+            ? TextSelection.collapsed(offset: text.length)
+            : inputController.selection;
+
+        // 🔥 Nothing to delete
+        if (text.isEmpty || selection.start == 0) {
+          return;
         }
+
+        final newStart = selection.start - 1;
+
+        final newText = text.replaceRange(
+          newStart,
+          selection.start,
+          "",
+        );
+
+        inputController.value = TextEditingValue(
+          text: newText,
+          selection: TextSelection.collapsed(
+            offset: newStart,
+          ),
+        );
+
         return;
       }
 
@@ -650,8 +672,26 @@ class _UniversalConverterScreenState
 
       if (k == "." &&
           inputController.text.contains(".")) return;
+      final text = inputController.text;
+      final selection = inputController.selection.start < 0
+          ? TextSelection.collapsed(offset: text.length)
+          : inputController.selection;
 
-      inputController.text += k;
+      final newText = text.replaceRange(
+        selection.start,
+        selection.end,
+        k,
+      );
+
+// 🔥 update controller safely
+      inputController.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(
+          offset: selection.start + k.length,
+        ),
+      );
+
+
     });
   }
 

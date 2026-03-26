@@ -132,21 +132,13 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     // ---------- BACKSPACE ----------
     if (v == "⌫") {
-      final selection = _controller.selection;
-
-      if (rawExpression.isNotEmpty && selection.start > 0) {
-        int cursorPos = selection.start;
-
-        // remove character before cursor
+      if (rawExpression.isNotEmpty) {
         rawExpression =
-            rawExpression.substring(0, cursorPos - 1) +
-                rawExpression.substring(cursorPos);
+            rawExpression.substring(0, rawExpression.length - 1);
 
         _controller.text = formatExpression(rawExpression);
-
-        // move cursor correctly
         _controller.selection =
-            TextSelection.collapsed(offset: cursorPos - 1);
+            TextSelection.collapsed(offset: _controller.text.length);
       }
 
       updatePreview();
@@ -341,7 +333,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 backgroundCursorColor: Colors.grey,
                 style: TextStyle(
                   fontFamily: "Montserrat",
-                  fontSize: 29,
+                  fontSize: 26,
                   fontWeight: FontWeight.w600,
                   color: textPrimary,
                 ),
@@ -491,7 +483,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                 text,
                 style: TextStyle(
                   fontFamily: "Montserrat",
-                  fontSize: 40,
+                  fontSize: 39,
                   fontWeight: FontWeight.w600,
                   color: txt,
                 ),
