@@ -66,6 +66,16 @@ class _UniversalConverterScreenState
 
   bool swapAnim = false;
 
+  String normalize(String input) {
+    return input
+        .toLowerCase()
+        .replaceAll(' ', '')
+        .replaceAll('₂', '2')
+        .replaceAll('³', '3')
+        .replaceAll('²', '2')
+        .replaceAll('/', '');
+  }
+
   // ================= COLORS =================
   bool get isDark => Theme.of(context).brightness == Brightness.dark;
 
@@ -844,35 +854,263 @@ class _UniversalConverterScreenState
   }
 
   void showUnitSheet(bool isFrom) {
-    showCupertinoModalPopup(
+    final TextEditingController searchCtrl = TextEditingController();
+    List<Map<String, dynamic>> filtered = List.from(units);
+    final FocusNode searchFocus = FocusNode();
+
+    showModalBottomSheet(
       context: context,
-      builder: (_) => CupertinoActionSheet(
-        title: const Text("Select Unit"),
-        actions: units.map((u) {
-          return CupertinoActionSheetAction(
-            onPressed: () {
-              Navigator.pop(context);
-              setState(() {
-                if (isFrom) {
-                  fromUnit = u["s"]!;
-                  fromController.jumpToItem(units.indexOf(u));
-                } else {
-                  toUnit = u["s"]!;
-                  toController.jumpToItem(units.indexOf(u));
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (_) {
+        return StatefulBuilder(
+          builder: (context, setModalState) {
+
+            void filter(String text) {
+              final q = normalize(text);
+
+              setModalState(() {
+                if (q.isEmpty) {
+                  filtered = List.from(units);
+                  return;
                 }
+
+                filtered = units.where((u) {
+                  final name = normalize(u["f"]);
+                  final symbol = normalize(u["s"]);
+                  return name.contains(q) || symbol.contains(q);
+                }).toList();
               });
-            },
-            child: Text("${u["s"]} - ${u["f"]}"),
-          );
-        }).toList(),
-        cancelButton: CupertinoActionSheetAction(
-          onPressed: () => Navigator.pop(context),
-          child: const Text("Cancel"),
-        ),
-      ),
+            }
+
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+
+            return Container(
+              height: MediaQuery.of(context).size.height * 0.75,
+              decoration: BoxDecoration(
+                color: isDark
+                    ? const Color(0xFF18181A)
+                    : const Color(0xFFF2F4F7),
+                borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(26),
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.08),
+                    blurRadius: 30,
+                    offset: const Offset(0, -6),
+                  ),
+                ],
+              ),
+              child: Column(
+                children: [
+
+                  const SizedBox(height: 12),
+
+                  // 🔹 iOS Handle
+                  Container(
+                    width: 44,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.withValues(alpha: 0.25),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+
+                  const SizedBox(height: 14),
+
+                  // 🔹 SEARCH BAR
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Container(
+                      height: 46,
+                      padding: const EdgeInsets.symmetric(horizontal: 14),
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.05)
+                            : Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.04),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Row(
+                        children: [
+
+                          Icon(
+                            Icons.search,
+                            size: 18,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withValues(alpha: 0.5),
+                          ),
+
+                          const SizedBox(width: 10),
+
+                          Expanded(
+                            child: TextField(
+                              controller: searchCtrl,
+                              focusNode: searchFocus,
+                              autofocus: false,
+                              onTap: () => setModalState(() {}),
+                              onChanged: (text) {
+                                filter(text);
+                                setModalState(() {});
+                              },
+                              style: const TextStyle(
+                                fontFamily: 'Montserrat',
+                                fontWeight: FontWeight.w500,
+                                fontSize: 14,
+                              ),
+                              decoration: const InputDecoration(
+                                hintText: "Search unit...",
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+
+                          // 🔴 CLOSE KEYBOARD BUTTON
+                          if (searchFocus.hasFocus)
+                            GestureDetector(
+                              onTap: () {
+                                UISound.tap();
+                                FocusManager.instance.primaryFocus?.unfocus();
+                                setModalState(() {});
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.all(8),
+                                decoration: BoxDecoration(
+                                  color: Colors.red.withValues(alpha: 0.15),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(
+                                  Icons.close_rounded,
+                                  size: 18,
+                                  color: Colors.red,
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  // 🔹 LIST
+                  Expanded(
+                    child: ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: filtered.length,
+                      itemBuilder: (_, i) {
+                        final u = filtered[i];
+
+                        return Column(
+                          children: [
+
+                            Container(
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 2),
+                              child: Material(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(14),
+                                child: InkWell(
+                                  splashColor: Colors.white.withValues(alpha: 0.05),
+                                  highlightColor: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(14),
+                                  onTap: () {
+                                    Navigator.pop(context);
+
+                                    setState(() {
+                                      if (isFrom) {
+                                        fromUnit = u["s"];
+                                        fromController.jumpToItem(
+                                            units.indexOf(u));
+                                      } else {
+                                        toUnit = u["s"];
+                                        toController.jumpToItem(
+                                            units.indexOf(u));
+                                      }
+                                    });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 14, vertical: 10),
+                                    child: Row(
+                                      children: [
+
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                            children: [
+
+                                              Text(
+                                                u["s"],
+                                                style: const TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 15,
+                                                  letterSpacing: 0.2,
+                                                ),
+                                              ),
+
+                                              const SizedBox(height: 3),
+
+                                              Text(
+                                                u["f"],
+                                                style: TextStyle(
+                                                  fontFamily: 'Montserrat',
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .onSurface
+                                                      .withValues(alpha: 0.6),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          size: 14,
+                                          color: Colors.grey.withValues(alpha: 0.5),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            if (i != filtered.length - 1)
+                              Divider(
+                                height: 1,
+                                thickness: 0.6,
+                                color: Colors.grey.withValues(alpha: 0.12),
+                                indent: 20,
+                                endIndent: 20,
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        );
+      },
     );
   }
-
   void onCopy() async {
     if (result.isEmpty) {
       showEmptyAction("Nothing to copy");

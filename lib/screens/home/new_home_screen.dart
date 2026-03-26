@@ -82,9 +82,6 @@ final List<HomeSection> homeSections = [
 
   HomeSection("Pressure & Force", [
     HomeTile("Pressure","pressure","assets/images/homeIcons/pressureForce/Pressure.png"),
-    HomeTile("Pressure Delta","pressure_delta","assets/images/homeIcons/pressureForce/pressureDelta.png"),
-    HomeTile("Pressure High","pressure_high","assets/images/homeIcons/pressureForce/pressureHigh.png"),
-    HomeTile("Pressure Low","pressure_low","assets/images/homeIcons/pressureForce/pressureLow.png"),
     HomeTile("Force","force","assets/images/homeIcons/pressureForce/force.png"),
     HomeTile("Surface Tension","surface_tension","assets/images/homeIcons/pressureForce/surfaceTension.png"),
   ]),
@@ -176,6 +173,15 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   }
 
   /// =======================================================
+  String normalize(String input) {
+    return input
+        .toLowerCase()
+        .replaceAll(' ', '')        // remove spaces
+        .replaceAll('₂', '2')      // H₂O → H2O
+        .replaceAll('³', '3')      // if ever used
+        .replaceAll('/', '')       // optional (N/m² → Nm²)
+        .replaceAll('²', '2');     // m² → m2
+  }
 
   void updateSuggestions(String text) {
 
@@ -191,21 +197,21 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         return;
       }
 
-      final q = text.toLowerCase();
+      final q = normalize(text);
 
       final exact = <UnitSuggestion>[];
       final starts = <UnitSuggestion>[];
       final contains = <UnitSuggestion>[];
 
       for (final u in allUnitSuggestions) {
-        final name = u.name.toLowerCase();
-        final symbol = u.symbol.toLowerCase();
+        final name = normalize(u.name);
+        final symbol = normalize(u.symbol);
 
         if (name == q || symbol == q) {
           exact.add(u);
         } else if (symbol.startsWith(q) || name.startsWith(q)) {
           starts.add(u);
-        } else if (name.contains(q)) {
+        } else if (name.contains(q) || symbol.contains(q)) { // 👈 ADD THIS ALSO
           contains.add(u);
         }
       }

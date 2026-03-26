@@ -25,9 +25,6 @@ const Map<String, List<String>> converterCatalog = {
 
   "Pressure & Force": [
     "pressure",
-    "pressure_delta",
-    "Pressure_high",
-    "Pressure_low",
     "force",
     "surface_tension",
   ],

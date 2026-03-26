@@ -152,9 +152,10 @@ final Map<String, Map<String, double>> unitMap = {
     "cal/(s·m·°C)": 4.184,
   },
 
-  // ================= PRESSURE =================
-// Base: Pa (absolute)
+  // ================= PRESSURE (ALL MERGED) =================
+// Base: Pa
   "pressure": {
+    // ===== ABSOLUTE =====
     "Pa (A)": 1,
     "kPa (A)": 1000,
     "MPa (A)": 1e6,
@@ -163,16 +164,14 @@ final Map<String, Map<String, double>> unitMap = {
     "atm (A)": 101325,
     "kg/cm² (A)": 98066.5,
 
-    // Gauge converted to absolute internally
+    // ===== GAUGE ===== (same factors, logic unchanged)
     "kPa (G)": 1000,
     "MPa (G)": 1e6,
     "barg": 100000,
     "psig": 6894.757293,
     "atm (G)": 101325,
-  },
 
-// ================= PRESSURE HIGH =================
-  "pressure_high": {
+    // ===== GENERAL =====
     "bar": 100000,
     "psi": 6894.757293,
     "kPa": 1000,
@@ -181,7 +180,7 @@ final Map<String, Map<String, double>> unitMap = {
     "mmHg": 133.322368,
     "atm": 101325,
 
-    // ✅ ADDED
+    // ===== ADDED =====
     "hPa": 100,
     "mbar": 100,
     "ksi": 6894757.293,
@@ -189,46 +188,17 @@ final Map<String, Map<String, double>> unitMap = {
     "kgf/m²": 9.80665,
     "N/m²": 1,
     "at": 98066.5,
-  },
 
-// ================= PRESSURE LOW =================
-  "pressure_low": {
+    // ===== LOW =====
     "m H₂O": 9806.65,
     "ft H₂O": 2989.06692,
+    "cm H₂O": 98.0665,
+    "in H₂O": 249.08891,
     "cmHg": 1333.223684,
     "inHg": 3386.388158,
-    "in H₂O": 249.08891,
     "Pa": 1,
-
-    // ✅ ADDED
-    "cm H₂O": 98.0665,
-    "mmHg": 133.322368,
     "torr": 133.322368,
   },
-
-// ================= PRESSURE DELTA =================
-  "pressure_delta": {
-    "Pa": 1,
-    "kPa": 1000,
-    "mbar": 100,
-    "bar": 100000,
-    "psi": 6894.757293,
-    "atm": 101325,
-    "kg/cm²": 98066.5,
-    "m H₂O": 9806.65,
-
-    // ✅ ADDED
-    "hPa": 100,
-    "cm H₂O": 98.0665,
-    "ft H₂O": 2989.06692,
-    "mmHg": 133.322368,
-    "torr": 133.322368,
-    "psf": 47.880258,
-    "kgf/m²": 9.80665,
-    "N/m²": 1,
-    "at": 98066.5,
-  },
-
 // ================= FORCE =================
 // Base: Newton
   "force": {

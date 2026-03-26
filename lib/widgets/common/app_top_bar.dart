@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
-//import '../../screens/settings/settings_screen.dart';
-
 import 'package:flutter/cupertino.dart';
-
 import '../../core/utils/ui_sound.dart';
 import '../../screens/saved/universal_saved_screen.dart';
 import '../../screens/settings/settings_screen.dart';
-//import '../../screens/saved/universal_saved_screen.dart';
-
-
+import 'package:flutter/services.dart';
 
 class AppTopBar extends StatefulWidget {
   final int currentIndex;
@@ -31,6 +26,7 @@ class AppTopBar extends StatefulWidget {
 class _AppTopBarState extends State<AppTopBar> {
 
   String? _currentRouteName;
+  bool _isNavigating = false;
 
   //DateTime? _lastTapTime;
 
@@ -130,19 +126,23 @@ class _AppTopBarState extends State<AppTopBar> {
                 // ================= BOOKMARK =================
                 IconButton(
                   icon: const Icon(CupertinoIcons.bookmark),
-                  onPressed: () {
-                    if (_currentRouteName == "saved") return;
+                  onPressed: () async {
+                    if (_currentRouteName == "saved" || _isNavigating) return;
 
+                    _isNavigating = true;
                     UISound.tap();
+                    HapticFeedback.lightImpact();
 
-                    Navigator.pushAndRemoveUntil(
+                    await Navigator.pushAndRemoveUntil(
                       context,
                       CupertinoPageRoute(
                         builder: (_) => const UniversalSavedScreen(),
                         settings: const RouteSettings(name: "saved"),
                       ),
-                          (route) => route.settings.name != "saved",
+                          (route) => route.settings.name == "/" || route.isFirst,
                     );
+
+                    if (mounted) _isNavigating = false;
                   },
                 ),
 
@@ -152,9 +152,11 @@ class _AppTopBarState extends State<AppTopBar> {
                 IconButton(
                   icon: const Icon(CupertinoIcons.settings),
                   onPressed: () async {
-                    if (_currentRouteName == "settings") return;
+                    if (_currentRouteName == "settings" || _isNavigating) return;
 
+                    _isNavigating = true;
                     UISound.tap();
+                    HapticFeedback.lightImpact();
 
                     final changed = await Navigator.pushAndRemoveUntil(
                       context,
@@ -162,19 +164,16 @@ class _AppTopBarState extends State<AppTopBar> {
                         builder: (_) => const SettingsScreen(),
                         settings: const RouteSettings(name: "settings"),
                       ),
-                          (route) => route.settings.name != "settings",
+                          (route) => route.settings.name == "/" || route.isFirst,
                     );
+
+                    if (mounted) _isNavigating = false;
 
                     if (changed == true) {
                       widget.onSettingsChanged?.call();
                     }
                   },
                 ),
-
-
-
-
-
 
               ],
             ),

@@ -152,78 +152,56 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 
   // ================= PRESSURE & FORCE =================
 
-// ---------- PRESSURE ----------
+// ---------- PRESSURE (ALL MERGED) ----------
   "pressure": [
-    {"s":"Pa (A)", "f":"pascal absolute"},
-    {"s":"kPa (A)", "f":"kilopascal absolute"},
-    {"s":"MPa (A)", "f":"megapascal absolute"},
-    {"s":"bara", "f":"bar absolute"},
-    {"s":"psia", "f":"pounds/sqr inch absolute"},
-    {"s":"atm (A)", "f":"atmosphere absolute"},
-    {"s":"kg/cm² (A)", "f":"kg-force per cm² absolute"},
-    {"s":"kPa (G)", "f":"kilopascal gauge"},
-    {"s":"MPa (G)", "f":"megapascal gauge"},
-    {"s":"barg", "f":"bar gauge"},
-    {"s":"psig", "f":"pounds/sqr inch gauge"},
-    {"s":"atm (G)", "f":"atmosphere gauge"},
-  ],
+    {"s":"at", "f":"technical atmosphere"}, // high / general
+    {"s":"atm", "f":"atmosphere"}, // high / general
+    {"s":"atm (A)", "f":"atmosphere absolute"}, // absolute
+    {"s":"atm (G)", "f":"atmosphere gauge"}, // gauge
 
-// ---------- PRESSURE HIGH ----------
-  "pressure_high": [
-    {"s":"bar", "f":"bar"},
-    {"s":"psi", "f":"pound per sqr inch"},
-    {"s":"kPa", "f":"kilopascal"},
-    {"s":"MPa", "f":"megapascal"},
-    {"s":"kgf/cm²", "f":"kg-force per cm²"},
-    {"s":"mmHg", "f":"mm of mercury"},
-    {"s":"atm", "f":"atmosphere"},
+    {"s":"bar", "f":"bar"}, // high / general
+    {"s":"bara", "f":"bar absolute"}, // absolute
+    {"s":"barg", "f":"bar gauge"}, // gauge
 
-    // ✅ ADDED
-    {"s":"hPa", "f":"hectopascal"},
-    {"s":"mbar", "f":"millibar"},
-    {"s":"ksi", "f":"kilopound per square inch"},
-    {"s":"psf", "f":"pound per square foot"},
-    {"s":"kgf/m²", "f":"kilogram-force per square meter"},
-    {"s":"N/m²", "f":"newton per square meter"},
-    {"s":"at", "f":"technical atmosphere"},
-  ],
+    {"s":"cm H₂O", "f":"centimeter of water"}, // low
+    {"s":"cmHg", "f":"centimeter of mercury"}, // low
+    {"s":"ft H₂O", "f":"foot of water"}, // low
 
-// ---------- PRESSURE LOW ----------
-  "pressure_low": [
-    {"s":"m H₂O", "f":"meter of water"},
-    {"s":"ft H₂O", "f":"foot of water"},
-    {"s":"cmHg", "f":"centimeter of mercury"},
-    {"s":"inHg", "f":"inch of mercury"},
-    {"s":"in H₂O", "f":"inch of water"},
-    {"s":"Pa", "f":"pascal"},
+    {"s":"hPa", "f":"hectopascal"}, // high / general
 
-    // ✅ ADDED
-    {"s":"cm H₂O", "f":"centimeter of water"},
-    {"s":"mmHg", "f":"millimeter of mercury"},
-    {"s":"torr", "f":"torr"},
-  ],
+    {"s":"in H₂O", "f":"inch of water"}, // low
+    {"s":"inHg", "f":"inch of mercury"}, // low
 
-// ---------- PRESSURE DELTA ----------
-  "pressure_delta": [
-    {"s":"Pa", "f":"pascal"},
-    {"s":"kPa", "f":"kilopascal"},
-    {"s":"mbar", "f":"millibar"},
-    {"s":"bar", "f":"bar"},
-    {"s":"psi", "f":"psi"},
-    {"s":"atm", "f":"atmosphere"},
-    {"s":"kg/cm²", "f":"kg-force per cm²"},
-    {"s":"m H₂O", "f":"meter of water"},
+    {"s":"kg/cm² (A)", "f":"kg-force per cm² absolute"}, // absolute
+    {"s":"kgf/cm²", "f":"kg-force per cm²"}, // high / general
+    {"s":"kgf/m²", "f":"kilogram-force per square meter"}, // high / delta/general
 
-    // ✅ ADDED
-    {"s":"hPa", "f":"hectopascal"},
-    {"s":"cm H₂O", "f":"centimeter of water"},
-    {"s":"ft H₂O", "f":"foot of water"},
-    {"s":"mmHg", "f":"millimeter of mercury"},
-    {"s":"torr", "f":"torr"},
-    {"s":"psf", "f":"pound per square foot"},
-    {"s":"kgf/m²", "f":"kilogram-force per square meter"},
-    {"s":"N/m²", "f":"newton per square meter"},
-    {"s":"at", "f":"technical atmosphere"},
+    {"s":"kPa", "f":"kilopascal"}, // high / general / delta
+    {"s":"kPa (A)", "f":"kilopascal absolute"}, // absolute
+    {"s":"kPa (G)", "f":"kilopascal gauge"}, // gauge
+
+    {"s":"ksi", "f":"kilopound per square inch"}, // high
+
+    {"s":"m H₂O", "f":"meter of water"}, // low / delta
+    {"s":"mbar", "f":"millibar"}, // high / delta
+
+    {"s":"mmHg", "f":"millimeter of mercury"}, // high / low / delta
+
+    {"s":"MPa", "f":"megapascal"}, // high / general
+    {"s":"MPa (A)", "f":"megapascal absolute"}, // absolute
+    {"s":"MPa (G)", "f":"megapascal gauge"}, // gauge
+
+    {"s":"N/m²", "f":"newton per square meter"}, // general / delta (SI base)
+
+    {"s":"Pa", "f":"pascal"}, // general / low / delta
+    {"s":"Pa (A)", "f":"pascal absolute"}, // absolute
+
+    {"s":"psf", "f":"pound per square foot"}, // delta / general
+    {"s":"psi", "f":"pound per sqr inch"}, // high / general
+    {"s":"psia", "f":"pounds/sqr inch absolute"}, // absolute
+    {"s":"psig", "f":"pounds/sqr inch gauge"}, // gauge
+
+    {"s":"torr", "f":"torr"}, // low / delta
   ],
 
 // ---------- FORCE ----------

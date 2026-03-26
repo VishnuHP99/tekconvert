@@ -13,9 +13,10 @@ class CalculatorScreen extends StatefulWidget {
   State<CalculatorScreen> createState() => _CalculatorScreenState();
 }
 
-class _CalculatorScreenState extends State<CalculatorScreen> {
+class _CalculatorScreenState extends State<CalculatorScreen>
+{
 
-
+  final ScrollController _scrollController = ScrollController();
   String rawExpression = "";
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -39,6 +40,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     _controller.selection =
     const TextSelection.collapsed(offset: 0);
+
   }
 
 
@@ -101,47 +103,87 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     return RegExp(r'^[0-9]$').hasMatch(s);
   }
 
+  void _scrollToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
 
   // ================= INSERT AT CURSOR =================
+  // ================= INSERT AT CURSOR =================
   void insertText(String text) {
-    final value = rawExpression;
+    final selection = _controller.selection;
+    int cursor = selection.start;
 
-    rawExpression = value + text;
+    if (cursor < 0) cursor = rawExpression.length;
 
-    _controller.text = formatExpression(rawExpression);
-    _controller.selection =
-        TextSelection.collapsed(offset: _controller.text.length);
+    setState(() {
+      // 🔥 insert at cursor
+      rawExpression =
+          rawExpression.substring(0, cursor) +
+              text +
+              rawExpression.substring(cursor);
 
-    updatePreview(); // ✅ ALWAYS call
+      _controller.text = rawExpression;
+
+      final newCursor = cursor + text.length;
+
+      _controller.selection = TextSelection.collapsed(
+        offset: newCursor.clamp(0, rawExpression.length),
+      );
+    });
+
+    updatePreview();
+    _scrollToEnd(); // ✅ ADD THIS
   }
+  // ================= BUTTON TAP =================
   // ================= BUTTON TAP =================
   void onTap(String v) {
 
     // 🔊 keypad sound
     UISound.keyboard();
 
-
     // ---------- CLEAR ----------
     if (v == "AC") {
-      rawExpression = "";   // 🔥 IMPORTANT
-      _controller.clear();
-      previewResult = "";
-      setState(() {});
+      setState(() {
+        rawExpression = "";   // 🔥 IMPORTANT
+        _controller.clear();
+        previewResult = "";
+      });
       return;
     }
 
     // ---------- BACKSPACE ----------
     if (v == "⌫") {
-      if (rawExpression.isNotEmpty) {
-        rawExpression =
-            rawExpression.substring(0, rawExpression.length - 1);
+      final selection = _controller.selection;
+      int cursor = selection.start;
 
-        _controller.text = formatExpression(rawExpression);
-        _controller.selection =
-            TextSelection.collapsed(offset: _controller.text.length);
-      }
+      if (cursor <= 0 || rawExpression.isEmpty) return;
+
+      setState(() {
+        // 🔥 delete at cursor
+        rawExpression =
+            rawExpression.substring(0, cursor - 1) +
+                rawExpression.substring(cursor);
+
+        _controller.text = rawExpression;
+
+        final newCursor = cursor - 1;
+
+        _controller.selection = TextSelection.collapsed(
+          offset: newCursor.clamp(0, rawExpression.length),
+        );
+      });
 
       updatePreview();
+      _scrollToEnd(); // ✅ ADD THIS
       return;
     }
 
@@ -168,13 +210,34 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
     // ---------- NORMAL ----------
     handleSmartInsert(v);
   }
-
   void handleSmartInsert(String v) {
-
     final text = rawExpression;
+    // ---------- CONTINUE AFTER RESULT ----------
+    if (previewResult.isEmpty && _controller.text.isNotEmpty) {
+      // if last action was "=" and user presses operator
+      if (isOperator(v)) {
+        _controller.text = rawExpression;
+        _controller.selection = TextSelection.collapsed(
+          offset: rawExpression.length,
+        );
+      }
+    }
+
+    // ---------- DECIMAL CONTROL ----------
+    if (v == ".") {
+      final parts = rawExpression.split(RegExp(r'[+\-x/%]'));
+      final lastNumber = parts.isNotEmpty ? parts.last : "";
+
+      if (lastNumber.contains(".")) return;
+
+      if (lastNumber.isEmpty) {
+        insertText("0.");
+        return;
+      }
+    }
 
     if (text.isEmpty) {
-      if (isOperator(v)) return;   // block starting with operator
+      if (isOperator(v)) return;
       insertText(v);
       return;
     }
@@ -183,12 +246,14 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
     // ---------- Prevent operator spam ----------
     if (isOperator(last) && isOperator(v)) {
-      rawExpression =
-          text.substring(0, text.length - 1) + v;
+      setState(() {
+        rawExpression =
+            text.substring(0, text.length - 1) + v;
 
-      _controller.text = formatExpression(rawExpression);
-      _controller.selection =
-          TextSelection.collapsed(offset: _controller.text.length);
+        _controller.text = rawExpression;
+        _controller.selection =
+            TextSelection.collapsed(offset: rawExpression.length);
+      });
 
       updatePreview();
       return;
@@ -203,8 +268,8 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       insertText("x$v");
       return;
     }
+
     // ---------- Decimal after bracket ----------
-// ) . → )x0.
     if (last == ")" && v == ".") {
       insertText("x0.");
       return;
@@ -214,7 +279,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
   }
 
 
-
+  // ================= CALCULATE =================
   // ================= CALCULATE =================
   void calculate() {
     final text = rawExpression;
@@ -234,29 +299,37 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       double res =
       ex.evaluate(EvaluationType.REAL, ContextModel());
 
-      // ✅ format result WITH commas
+      // ✅ format result WITH commas (for history only)
       String formatted = AppSettings.format(res);
 
       history.insert(0, "$text = $formatted");
       if (history.length > 5) history.removeLast();
       saveHistory();
 
-      _controller.text = formatted;
-      _controller.selection =
-          TextSelection.collapsed(offset: formatted.length);
+      setState(() {
+        // Keep rawExpression and controller in perfect sync!
+        if (res % 1 == 0) {
+          rawExpression = res.toInt().toString(); // ✅ remove .0
+        } else {
+          rawExpression = res.toString();
+        }
 
-      previewResult = "";
-      setState(() {});
-      rawExpression = res.toString();  // 🔥 CRITICAL
+        _controller.text = rawExpression;
+
+        _controller.selection =
+            TextSelection.collapsed(offset: rawExpression.length);
+
+        previewResult = "";
+      });
+      _scrollToEnd();
+
     } catch (_) {
-      _controller.text = "Error";
-      previewResult = "";
-      setState(() {});
-
+      setState(() {
+        _controller.text = "Error";
+        previewResult = "";
+      });
     }
-
   }
-
 
 
   // ================= PREVIEW =================
@@ -325,12 +398,18 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
 
               EditableText(
                 controller: _controller,
+                scrollController: _scrollController, // ✅ ADD THIS LINE
                 focusNode: _focusNode,
                 readOnly: true,
                 textAlign: TextAlign.right,
+                maxLines: 1, // 🔥 IMPORTANT
                 showCursor: true,
                 cursorColor: Colors.blue,
                 backgroundCursorColor: Colors.grey,
+
+                // 🔥 ADD THIS
+                scrollPhysics: const BouncingScrollPhysics(),
+
                 style: TextStyle(
                   fontFamily: "Montserrat",
                   fontSize: 26,
@@ -509,17 +588,6 @@ class _LifecycleObserver extends WidgetsBindingObserver {
   }
 }
 String formatExpression(String input) {
-  return input.replaceAllMapped(
-    RegExp(r'\d+\.?\d*'),
-        (match) {
-      final numStr = match.group(0)!;
-
-      if (numStr.endsWith(".")) return numStr;
-
-      final numVal = double.tryParse(numStr);
-      if (numVal == null) return numStr;
-
-      return AppSettings.format(numVal);
-    },
-  );
+  return input; // 🔥 no formatting while typing
 }
+
