@@ -133,14 +133,25 @@ class _AppTopBarState extends State<AppTopBar> {
                     UISound.tap();
                     HapticFeedback.lightImpact();
 
-                    await Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (_) => const UniversalSavedScreen(),
-                        settings: const RouteSettings(name: "saved"),
-                      ),
-                          (route) => route.settings.name == "/" || route.isFirst,
-                    );
+                    // If we are already in Settings, replace it so we don't build a loop
+                    if (_currentRouteName == "settings") {
+                      await Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (_) => const UniversalSavedScreen(),
+                          settings: const RouteSettings(name: "saved"),
+                        ),
+                      );
+                    } else {
+                      // Otherwise, do a normal push from the home/main screen
+                      await Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (_) => const UniversalSavedScreen(),
+                          settings: const RouteSettings(name: "saved"),
+                        ),
+                      );
+                    }
 
                     if (mounted) _isNavigating = false;
                   },
@@ -148,6 +159,7 @@ class _AppTopBarState extends State<AppTopBar> {
 
 
 
+                // ================= SETTINGS =================
                 // ================= SETTINGS =================
                 IconButton(
                   icon: const Icon(CupertinoIcons.settings),
@@ -158,20 +170,30 @@ class _AppTopBarState extends State<AppTopBar> {
                     UISound.tap();
                     HapticFeedback.lightImpact();
 
-                    final changed = await Navigator.pushAndRemoveUntil(
-                      context,
-                      CupertinoPageRoute(
-                        builder: (_) => const SettingsScreen(),
-                        settings: const RouteSettings(name: "settings"),
-                      ),
-                          (route) => route.settings.name == "/" || route.isFirst,
-                    );
+                    if (_currentRouteName == "saved") {
+                      await Navigator.pushReplacement(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (_) => const SettingsScreen(),
+                          settings: const RouteSettings(name: "settings"),
+                        ),
+                      );
+                    } else {
+                      await Navigator.push(
+                        context,
+                        CupertinoPageRoute(
+                          builder: (_) => const SettingsScreen(),
+                          settings: const RouteSettings(name: "settings"),
+                        ),
+                      );
+                    }
 
                     if (mounted) _isNavigating = false;
 
-                    if (changed == true) {
-                      widget.onSettingsChanged?.call();
-                    }
+                    // 🔥 FIX: Trigger unconditionally!
+                    // This ensures the converter refreshes even if the user
+                    // uses the Android system back button or iOS swipe-back.
+                    widget.onSettingsChanged?.call();
                   },
                 ),
 

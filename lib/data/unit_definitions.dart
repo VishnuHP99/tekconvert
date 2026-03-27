@@ -4,14 +4,26 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 
   // ---------- LENGTH ----------
   "length": [
-    {"s": "mm", "f": "millimeter"},
+    {"s": "Å", "f": "angstrom"},        // 🔥 added
+    {"s": "au", "f": "astronomical unit"}, // 🔥 added
     {"s": "cm", "f": "centimeter"},
-    {"s": "m", "f": "meter"},
-    {"s": "km", "f": "kilometer"},
-    {"s": "in", "f": "inch"},
+    {"s": "dm", "f": "decimeter"},      // 🔥 added
     {"s": "ft", "f": "foot"},
-    {"s": "yd", "f": "yard"},
+    {"s": "fathom", "f": "fathom"},     // 🔥 added
+    {"s": "fur", "f": "furlong"},       // 🔥 added
+    {"s": "in", "f": "inch"},
+    {"s": "km", "f": "kilometer"},
+    {"s": "league", "f": "league"},     // 🔥 added
+    {"s": "ly", "f": "light year"},     // 🔥 added
+    {"s": "m", "f": "meter"},
     {"s": "mi", "f": "mile"},
+    {"s": "mil", "f": "mils"},           // 🔥 added
+    {"s": "mm", "f": "millimeter"},
+    {"s": "μm", "f": "micrometer"},     // 🔥 added
+    {"s": "nmi", "f": "nautical mile"}, // 🔥 added
+    {"s": "pc", "f": "parsec"},         // 🔥 added
+    {"s": "rod", "f": "rod"},           // 🔥 added
+    {"s": "yd", "f": "yard"},
   ],
 
   // ---------- AREA SMALL ----------
@@ -102,11 +114,21 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 
 // ---------- ENERGY ----------
   "energy": [
-    {"s": "J", "f": "joule"},
-    {"s": "kJ", "f": "kilojoule"},
-    {"s": "cal", "f": "calorie"},
-    {"s": "kcal", "f": "kilocalorie"},
-    {"s": "BTU", "f": "British thermal unit"},
+    {"s": "J", "f": "Joules (J)"},
+    {"s": "kJ", "f": "Kilojoules (kJ)"},
+    {"s": "MJ", "f": "Megajoules (MJ)"},
+    {"s": "Gj", "f": "Gigajoules (Gj)"},
+    {"s": "cal", "f": "Calories (cal)"},
+    {"s": "kcal", "f": "Kilocalories (kcal)"},
+    {"s": "eV", "f": "Electron volts (eV)"},
+    {"s": "BTU", "f": "British thermal units (BTU)"},
+    {"s": "kWh", "f": "Kilowatt hours (kWh)"},
+    {"s": "Ws", "f": "Watt seconds (Ws)"},
+    {"s": "Nm", "f": "Newton meters (Nm)"},
+    {"s": "th", "f": "Thermie (th)"},
+    {"s": "quad", "f": "Quads"},
+    {"s": "thm", "f": "Therms"},
+    {"s": "ft·lb", "f": "Foot pounds"}
   ],
 
 // ---------- ENERGY RATE ----------
@@ -154,63 +176,68 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 
 // ---------- PRESSURE (ALL MERGED) ----------
   "pressure": [
-    {"s":"at", "f":"technical atmosphere"}, // high / general
-    {"s":"atm", "f":"atmosphere"}, // high / general
-    {"s":"atm (A)", "f":"atmosphere absolute"}, // absolute
-    {"s":"atm (G)", "f":"atmosphere gauge"}, // gauge
-
-    {"s":"bar", "f":"bar"}, // high / general
-    {"s":"bara", "f":"bar absolute"}, // absolute
-    {"s":"barg", "f":"bar gauge"}, // gauge
-
-    {"s":"cm H₂O", "f":"centimeter of water"}, // low
-    {"s":"cmHg", "f":"centimeter of mercury"}, // low
-    {"s":"ft H₂O", "f":"foot of water"}, // low
-
-    {"s":"hPa", "f":"hectopascal"}, // high / general
-
-    {"s":"in H₂O", "f":"inch of water"}, // low
-    {"s":"inHg", "f":"inch of mercury"}, // low
-
-    {"s":"kg/cm² (A)", "f":"kg-force per cm² absolute"}, // absolute
-    {"s":"kgf/cm²", "f":"kg-force per cm²"}, // high / general
-    {"s":"kgf/m²", "f":"kilogram-force per square meter"}, // high / delta/general
-
-    {"s":"kPa", "f":"kilopascal"}, // high / general / delta
-    {"s":"kPa (A)", "f":"kilopascal absolute"}, // absolute
-    {"s":"kPa (G)", "f":"kilopascal gauge"}, // gauge
-
-    {"s":"ksi", "f":"kilopound per square inch"}, // high
-
-    {"s":"m H₂O", "f":"meter of water"}, // low / delta
-    {"s":"mbar", "f":"millibar"}, // high / delta
-
-    {"s":"mmHg", "f":"millimeter of mercury"}, // high / low / delta
-
-    {"s":"MPa", "f":"megapascal"}, // high / general
-    {"s":"MPa (A)", "f":"megapascal absolute"}, // absolute
-    {"s":"MPa (G)", "f":"megapascal gauge"}, // gauge
-
-    {"s":"N/m²", "f":"newton per square meter"}, // general / delta (SI base)
-
-    {"s":"Pa", "f":"pascal"}, // general / low / delta
-    {"s":"Pa (A)", "f":"pascal absolute"}, // absolute
-
-    {"s":"psf", "f":"pound per square foot"}, // delta / general
-    {"s":"psi", "f":"pound per sqr inch"}, // high / general
-    {"s":"psia", "f":"pounds/sqr inch absolute"}, // absolute
-    {"s":"psig", "f":"pounds/sqr inch gauge"}, // gauge
-
-    {"s":"torr", "f":"torr"}, // low / delta
+    {"s":"at", "f":"technical atmosphere"},
+    {"s":"atm", "f":"standard atmosphere"},
+    {"s":"atm (A)", "f":"atmosphere absolute"},
+    {"s":"atm (G)", "f":"atmosphere gauge"},
+    {"s":"bar", "f":"bar"},
+    {"s":"bara", "f":"bar absolute"},
+    {"s":"barg", "f":"bar gauge"},
+    {"s":"cm H₂O", "f":"centimeter of water (4°C)"},
+    {"s":"cmHg", "f":"centimeter of mercury (0°C)"},
+    {"s":"ft H₂O", "f":"foot of water (4°C)"},
+    {"s":"hPa", "f":"hectopascal"},
+    {"s":"in H₂O", "f":"inch of water (4°C)"},
+    {"s":"inHg", "f":"inch of mercury (0°C)"},
+    {"s":"kg/cm² (A)", "f":"kg-force per cm² absolute"},
+    {"s":"kgf/cm²", "f":"kilogram-force per cm²"},
+    {"s":"kgf/m²", "f":"kilogram-force per m²"},
+    {"s":"kPa", "f":"kilopascal"},
+    {"s":"kPa (A)", "f":"kilopascal absolute"},
+    {"s":"kPa (G)", "f":"kilopascal gauge"},
+    {"s":"ksi", "f":"kilopound per square inch"},
+    {"s":"m H₂O", "f":"meter of water (4°C)"},
+    {"s":"mbar", "f":"millibar"},
+    {"s":"mmHg", "f":"millimeter of mercury (0°C)"},
+    {"s":"MPa", "f":"megapascal"},
+    {"s":"MPa (A)", "f":"megapascal absolute"},
+    {"s":"MPa (G)", "f":"megapascal gauge"},
+    {"s":"N/m²", "f":"newton per square meter"},
+    {"s":"Pa", "f":"pascal"},
+    {"s":"Pa (A)", "f":"pascal absolute"},
+    {"s":"psf", "f":"pound per square foot"},
+    {"s":"psi", "f":"pound per square inch"},
+    {"s":"psia", "f":"pound per square inch absolute"},
+    {"s":"psig", "f":"pound per square inch gauge"},
+    {"s":"torr", "f":"torr"},
   ],
 
 // ---------- FORCE ----------
   "force": [
-    {"s":"N", "f":"newton"},
-    {"s":"mN", "f":"millinewton"},
-    {"s":"kgf", "f":"kilogram-force"},
-    {"s":"lbf", "f":"pound-force"},
-    {"s":"dyn", "f":"dyne"},
+    {"s": "N", "f": "newton"},
+    {"s": "mN", "f": "millinewton"},
+    {"s": "μN", "f": "micronewton"},        // 🔥 added
+    {"s": "nN", "f": "nanonewton"},         // 🔥 added
+    {"s": "kN", "f": "kilonewton"},         // 🔥 added
+    {"s": "MN", "f": "meganewton"},         // 🔥 added
+    {"s": "GN", "f": "giganewton"},         // 🔥 added
+
+    {"s": "dyn", "f": "dyne"},
+    {"s": "kgf", "f": "kilogram-force"},
+    {"s": "gf", "f": "gram-force"},         // 🔥 added
+    {"s": "mgf", "f": "milligram-force"},   // 🔥 added
+    {"s": "lbf", "f": "pound-force"},
+    {"s": "ozf", "f": "ounce-force"},       // 🔥 added
+
+    {"s": "kip", "f": "kip"},               // 🔥 added
+    {"s": "pdl", "f": "poundal"},           // 🔥 added
+
+    {"s": "tf", "f": "ton-force"},          // 🔥 added (metric)
+    {"s": "stnf", "f": "short ton-force"},  // 🔥 added
+    {"s": "ltnf", "f": "long ton-force"},   // 🔥 added
+
+    {"s": "sn", "f": "sthène"},             // 🔥 added
+    {"s": "kp", "f": "kilopond"},           // 🔥 added (same as kgf)
   ],
 
 /// ---------- SURFACE TENSION ----------
@@ -287,11 +314,22 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 // ================= POWER =================
 
   "power": [
-    {"s": "W", "f": "watt"},
-    {"s": "kW", "f": "kilowatt"},
-    {"s": "MW", "f": "megawatt"},
-    {"s": "hp", "f": "horsepower"},
+    {"s": "bhp", "f": "boiler horsepower"},          // 🔥 added
     {"s": "BTU/h", "f": "BTU per hour"},
+    {"s": "BTU/s", "f": "BTU per second"},           // 🔥 added
+    {"s": "cal/h", "f": "calories per hour"},        // 🔥 added
+    {"s": "ehp", "f": "electrical horsepower"},      // 🔥 added
+    {"s": "ft·lb/min", "f": "foot-pound per minute"},// 🔥 added
+    {"s": "ft·lb/s", "f": "foot-pound per second"},  // 🔥 added
+    {"s": "hp", "f": "horsepower"},
+    {"s": "J/s", "f": "joule per second"},           // 🔥 added (same as W)
+    {"s": "kW", "f": "kilowatt"},
+    {"s": "kcal/h", "f": "kilocalories per hour"},   // 🔥 added
+    {"s": "mhp", "f": "metric horsepower"},          // 🔥 added
+    {"s": "mW", "f": "milliwatt"},                  // 🔥 added
+    {"s": "MW", "f": "megawatt"},
+    {"s": "TR", "f": "ton of refrigeration"},        // 🔥 added
+    {"s": "W", "f": "watt"},
   ],
 
   // ================= VOLUME =================
@@ -299,69 +337,120 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 // ---------- VOLUME ----------
   "volume": [
     {"s": "mL", "f": "milliliter"},
+    {"s": "μL", "f": "microliter"},                 // 🔥 added
     {"s": "cm³", "f": "cubic centimeter"},
+    {"s": "mm³", "f": "cubic millimeter"},          // 🔥 added
     {"s": "L", "f": "liter"},
+    {"s": "cL", "f": "centiliter"},                 // 🔥 added
+    {"s": "dL", "f": "deciliter"},                  // 🔥 added
     {"s": "m³", "f": "cubic meter"},
+    {"s": "dm³", "f": "cubic decimeter"},           // 🔥 added
+    {"s": "km³", "f": "cubic kilometer"},           // 🔥 added
+
     {"s": "in³", "f": "cubic inch"},
     {"s": "ft³", "f": "cubic foot"},
-    {"s": "bbl", "f": "barrel"},
-    {"s": "bbl_us_oil", "f": "barrel (US Oil)"},
+    {"s": "yd³", "f": "cubic yard"},                // 🔥 added
+
     {"s": "gal_us", "f": "gallon (US)"},
     {"s": "gal_uk", "f": "gallon (UK)"},
+    {"s": "gal_us_dry", "f": "gallon (US dry)"},    // 🔥 added
+
+    {"s": "qt_us", "f": "quart (US liquid)"},       // 🔥 added
+    {"s": "qt_uk", "f": "quart (UK)"},              // 🔥 added
+    {"s": "qt_dry", "f": "quart (US dry)"},         // 🔥 added
+
+    {"s": "pt_us", "f": "pint (US liquid)"},        // 🔥 added
+    {"s": "pt_uk", "f": "pint (UK)"},               // 🔥 added
+    {"s": "pt_dry", "f": "pint (US dry)"},          // 🔥 added
+
+    {"s": "fl_oz_us", "f": "fluid ounce (US)"},     // 🔥 added
+    {"s": "fl_oz_uk", "f": "fluid ounce (UK)"},     // 🔥 added
+
+    {"s": "tbsp_us", "f": "tablespoon (US)"},       // 🔥 added
+    {"s": "tbsp_metric", "f": "tablespoon (metric)"},// 🔥 added
+    {"s": "tsp_us", "f": "teaspoon (US)"},          // 🔥 added
+    {"s": "tsp_metric", "f": "teaspoon (metric)"},  // 🔥 added
+
+    {"s": "cups", "f": "cups"},                     // 🔥 added
+
+    {"s": "bbl", "f": "barrel"},
+    {"s": "bbl_us_oil", "f": "barrel (US Oil)"},
+    {"s": "bbl_uk", "f": "barrel (UK)"},            // 🔥 added
+
+    {"s": "ac·ft", "f": "acre foot"},               // 🔥 added
   ],
 
 
-// ---------- VOLUME RATE – STANDARD ----------
-  "volume_rate_std": [
-    {"s": "Sm³/s", "f": "standard m³ per second"},
-    {"s": "Nm³/s", "f": "normal m³ per second"},
-    {"s": "Nm³/min", "f": "normal m³ per minute"},
-    {"s": "Nm³/h", "f": "normal m³ per hour"},
-    {"s": "Nm³/d", "f": "normal m³ per day"},
-    {"s": "MNm³/d", "f": "million Nm³ per day"},
-    {"s": "scf/h", "f": "std cubic ft/hour"},
-    {"s": "scf/m", "f": "std cubic ft/minute"},
-    {"s": "Mscf/d", "f": "thousand std cubic ft/day"},
-    {"s": "MMscf/d", "f": "million std cubic ft/day"},
-    {"s": "Bscf/y", "f": "billion scf per year"},
-    {"s": "Sl/m", "f": "std liter per minute"},
-    {"s": "Sl/h", "f": "std liter per hour"},
+// ---------- FLOW RATE – STANDARD ----------
+  "flow_standard": [
+    {"s": "Sm³/s", "f": "standard m³/s"},
+    {"s": "Sm³/min", "f": "standard m³/min"},     // 🔥 added
+    {"s": "Sm³/h", "f": "standard m³/h"},         // 🔥 added
+    {"s": "Sm³/d", "f": "standard m³/day"},       // 🔥 added
+
+    {"s": "Nm³/s", "f": "normal m³/s"},
+    {"s": "Nm³/min", "f": "normal m³/min"},
+    {"s": "Nm³/h", "f": "normal m³/h"},
+    {"s": "Nm³/d", "f": "normal m³/day"},
+    {"s": "MNm³/d", "f": "million Nm³/day"},
+
+    {"s": "scf/s", "f": "std cubic ft/s"},        // 🔥 added
+    {"s": "scf/m", "f": "std cubic ft/min"},
+    {"s": "scf/h", "f": "std cubic ft/h"},
+    {"s": "scf/d", "f": "std cubic ft/day"},      // 🔥 added
+
+    {"s": "Mscf/d", "f": "thousand scf/day"},
+    {"s": "MMscf/d", "f": "million scf/day"},
+    {"s": "Bscf/y", "f": "billion scf/year"},
+
+    {"s": "Sl/s", "f": "std liter/s"},            // 🔥 added
+    {"s": "Sl/m", "f": "std liter/min"},
+    {"s": "Sl/h", "f": "std liter/h"},
+
+    {"s": "Sm³/hr @ 59°F", "f": "std m³/hr @ 15°C"},     // 🔥 moved
+    {"s": "MSm³/hr @ 59°F", "f": "million std m³/hr"},  // 🔥 moved
+    {"s": "MSm³/d @ 59°F", "f": "million std m³/day"},  // 🔥 moved
+    {"s": "Nm³/hr @ 32°F", "f": "normal m³/hr @ 0°C"}, // 🔥 moved
   ],
 
 
-// ---------- VOLUME RATE – ACTUAL ----------
-  "volume_rate_actual": [
-    {"s": "am³/s", "f": "actual m³ per second"},
-    {"s": "am³/h", "f": "actual m³ per hour"},
-    {"s": "Mm³/d", "f": "million m³ per day"},
-    {"s": "Mcf/d", "f": "thousand cubic ft per day"},
-    {"s": "MMcf/d", "f": "million cubic ft per day"},
+// ---------- FLOW RATE – ACTUAL ----------
+  "flow_actual": [
+    {"s": "am³/s", "f": "actual m³/s"},
+    {"s": "am³/min", "f": "actual m³/min"},   // 🔥 added
+    {"s": "am³/h", "f": "actual m³/h"},
+    {"s": "am³/d", "f": "actual m³/day"},     // 🔥 added
+
+    {"s": "ft³/s", "f": "cubic ft/s"},        // 🔥 added
+    {"s": "ft³/min", "f": "cubic ft/min"},
+    {"s": "ft³/h", "f": "cubic ft/h"},
+
+    {"s": "Mcf/d", "f": "thousand ft³/day"},
+    {"s": "MMcf/d", "f": "million ft³/day"},
   ],
 
 
-// ---------- VOLUME RATE – LIQUID ----------
-  "volume_rate_liquid": [
-    {"s": "L/s", "f": "liter per second"},
-    {"s": "L/min", "f": "liter per minute"},
-    {"s": "m³/h", "f": "cubic mtr per hour"},
-    {"s": "ft³/min", "f": "cubic ft per minute"},
-    {"s": "ft³/h", "f": "cubic ft per hour"},
-    {"s": "gal/min", "f": "gallon per minute (US)"},
-    {"s": "bbl/d", "f": "barrel per day (US oil)"},
+// ----------  FLOW – LIQUID ----------
+  "flow_liquid": [
+    {"s": "L/s", "f": "liter/s"},
+    {"s": "L/min", "f": "liter/min"},
+    {"s": "L/h", "f": "liter/h"},           // 🔥 added
+
+    {"s": "m³/s", "f": "cubic m/s"},        // 🔥 added
+    {"s": "m³/h", "f": "cubic m/h"},
+
+    {"s": "ft³/s", "f": "cubic ft/s"},      // 🔥 added
+    {"s": "ft³/min", "f": "cubic ft/min"},
+    {"s": "ft³/h", "f": "cubic ft/h"},
+
+    {"s": "gal/min", "f": "gallon/min"},
+    {"s": "gal/h", "f": "gallon/h"},        // 🔥 added
+
+    {"s": "bbl/s", "f": "barrel/s"},        // 🔥 added
+    {"s": "bbl/h", "f": "barrel/h"},        // 🔥 added
+    {"s": "bbl/d", "f": "barrel/day"},
   ],
 
-  // ---------- GAS FLOW ----------
-  "gas_flow": [
-    {"s": "MMscf/d", "f": "million std cubic feet/day"},
-    {"s": "scf/d", "f": "std cubic ft/day"},
-    {"s": "scf/m", "f": "std cubic ft/minute"},
-
-    {"s": "Sm³/hr @ 59°F", "f": "std cubic m/hr @ 15°C"},
-    {"s": "Nm³/hr @ 32°F", "f": "normal cubic m/hr @ 0°C"},
-
-    {"s": "MSm³/d @ 59°F", "f": "million std cubic m/day @ 15°C"},
-    {"s": "MSm³/hr @ 59°F", "f": "million std cubic m/hr @ 15°C"}
-  ],
 
   // ================= HEAT TRANSER =================
   "heat_transfer": [
@@ -382,10 +471,22 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 
 // ================= TORQUE =================
   "torque": [
-    {"s": "N·m", "f": "newton meter"},
-    {"s": "kgf·m", "f": "kilogram-force meter"},
-    {"s": "ft·lb", "f": "foot pound"},
-    {"s": "in·lb", "f": "inch pound"},
+    {"s": "N·m", "f": "Newton metres"},
+    {"s": "MN·m", "f": "Meganewton metres"},
+    {"s": "kN·m", "f": "Kilonewton metres"},
+    {"s": "mN·m", "f": "Millinewton metres"},
+    {"s": "µN·m", "f": "Micronewton metres"},
+    {"s": "kgf·m", "f": "Kilogram-force metres"},
+    {"s": "cm·kgf", "f": "Centimetres kilogram-force"},
+    {"s": "gf·cm", "f": "Gram-force centimetres"},
+    {"s": "lbf·ft", "f": "Pound-force feet"},
+    {"s": "lbf·in", "f": "Pound-force inches"},
+    {"s": "ozf·ft", "f": "Ounce-force feet"},
+    {"s": "ozf·in", "f": "Ounce-force inches"},
+    {"s": "ft·lb", "f": "Foot-pound force"},
+    {"s": "in·lb", "f": "Inch-pound force"},  // 🔥 Added back
+    {"s": "kp·m", "f": "Kilopond metres"},
+    {"s": "dyn·cm", "f": "Dyne centimetres"}
   ],
 
 

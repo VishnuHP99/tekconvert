@@ -5,11 +5,10 @@ class AppSettings {
   static int _decimalPlaces = 5;
   static bool _scientificEnabled = false;
 
-  // Load once at app start
   static Future<void> init() async {
     final prefs = await SharedPreferences.getInstance();
     _decimalPlaces = prefs.getInt("decimal_places") ?? 5;
-    _scientificEnabled = prefs.getBool("scientific_enabled") ?? false;
+    _scientificEnabled = prefs.getBool("scientific_enabled") ?? true;
   }
 
   static int get decimalPlaces => _decimalPlaces;
@@ -21,7 +20,6 @@ class AppSettings {
     await prefs.setInt("decimal_places", value);
   }
 
-
   static Future<void> setScientificEnabled(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     _scientificEnabled = value;
@@ -29,30 +27,50 @@ class AppSettings {
   }
 
   // ======================================
-  // UNIVERSAL FORMATTER
+  // UNIVERSAL FORMATTER (CORRECTED)
   // ======================================
   static String format(double value) {
     double absVal = value.abs();
 
-    // If scientific toggle ON
+    // 1. SCIENTIFIC MODE
     if (_scientificEnabled &&
-        ((absVal >= 1e6) || (absVal > 0 && absVal < 1e-4))) {
+        ((absVal >= 1e6) || (absVal > 0 && absVal < 1e-6))) {
       return _toScientific(value);
     }
 
-    // Normal comma separated formatting
-    final formatter =
-    NumberFormat("#,##0.${'#' * _decimalPlaces}");
+    // 2. USE STRICT USER SETTING
+    int decimals = _decimalPlaces;
 
-    return formatter.format(value);
+    // --- SMALL NUMBER HANDLING REMOVED TO ENSURE ROUNDING WORKS ---
+
+    // 3. APPLY ROUNDING
+    String fixed = value.toStringAsFixed(decimals);
+
+    // 4. TRIM TRAILING ZEROS SAFELY
+    if (fixed.contains('.')) {
+      fixed = fixed
+          .replaceAll(RegExp(r'0+$'), '') // Remove zeros at end
+          .replaceAll(RegExp(r'\.$'), ''); // Remove dot if it's left at the end
+    }
+
+    // Failsafe for empty strings
+    if (fixed.isEmpty || fixed == "-") {
+      fixed = "0";
+    }
+
+    // 5. ADD COMMAS FOR THOUSANDS
+    final parts = fixed.split('.');
+    final intPart = parts[0];
+    final decPart = parts.length > 1 ? parts[1] : null;
+
+    final parsedInt = double.tryParse(intPart) ?? 0.0;
+    final formattedInt = NumberFormat("#,##0").format(parsedInt);
+
+    return decPart != null ? "$formattedInt.$decPart" : formattedInt;
   }
 
-  // ======================================
-  // SCIENTIFIC FORMATTER → 6 × 10⁶
-  // ======================================
   static String _toScientific(double value) {
     String exp = value.toStringAsExponential(_decimalPlaces);
-
     final parts = exp.split('e');
     double base = double.parse(parts[0]);
     int exponent = int.parse(parts[1]);
@@ -65,28 +83,11 @@ class AppSettings {
     return "$baseStr × 10${_toSuperscript(exponent)}";
   }
 
-  // ======================================
-  // Convert exponent → superscript
-  // ======================================
   static String _toSuperscript(int number) {
     const superscripts = {
-      '0': '⁰',
-      '1': '¹',
-      '2': '²',
-      '3': '³',
-      '4': '⁴',
-      '5': '⁵',
-      '6': '⁶',
-      '7': '⁷',
-      '8': '⁸',
-      '9': '⁹',
-      '-': '⁻',
+      '0': '⁰', '1': '¹', '2': '²', '3': '³', '4': '⁴',
+      '5': '⁵', '6': '⁶', '7': '⁷', '8': '⁸', '9': '⁹', '-': '⁻',
     };
-
-    return number
-        .toString()
-        .split('')
-        .map((c) => superscripts[c] ?? '')
-        .join();
+    return number.toString().split('').map((c) => superscripts[c] ?? '').join();
   }
 }

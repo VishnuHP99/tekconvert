@@ -69,32 +69,28 @@ double _convertTemperature(double v, String from, String to) {
 // pressure conversion
 double _convertPressure(double value, String fromUnit, String toUnit) {
   const double atm = 101325.0;
-
   final factors = unitMap["pressure"]!;
 
-  bool isGauge(String u) => u.contains("(G)") || u.endsWith("g");
+  // IMPROVED LOGIC: Check for gauge but ignore Mercury units (inHg, mmHg, etc.)
+  bool isGauge(String u) {
+    if (u.endsWith("Hg")) return false; // Mercury units are NOT gauge
+    return u.contains("(G)") || u.endsWith("g");
+  }
 
-  // ---------------------------
   // 1. Convert → Pa (ABSOLUTE)
-  // ---------------------------
   double pa = value * factors[fromUnit]!;
 
   if (isGauge(fromUnit)) {
     pa += atm;
   }
 
-  // ---------------------------
   // 2. Convert Pa → target
-  // ---------------------------
   double result = pa / factors[toUnit]!;
 
-  // ---------------------------
   // 3. Apply gauge correction
-  // ---------------------------
   if (isGauge(toUnit)) {
     result -= atm / factors[toUnit]!;
   }
 
   return result;
 }
-

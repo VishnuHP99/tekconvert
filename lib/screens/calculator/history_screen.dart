@@ -178,11 +178,11 @@ class _HistoryScreenState extends State<HistoryScreen> {
 
                             Text(
                               exp,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontFamily: "Montserrat",
                                 fontSize: 20,
                                 fontWeight: FontWeight.w600,
-                                color: Color(0xFF06034E),
+                                color: Theme.of(context).colorScheme.onSurface,
                               ),
                             ),
 

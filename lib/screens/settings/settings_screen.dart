@@ -78,7 +78,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           AppTopBar(
             currentIndex: -1,
             title: "Settings",
-            onBack: () => Navigator.pop(context),
+            onBack: () => Navigator.pop(context,true),
           ),
 
           Expanded(
@@ -129,7 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     onChanged: (v) {
                       setState(() => scientificEnabled = v);
                       saveScientific(v);
-                      notifyChanged();
+
                     },
                   ),
                 ]),
@@ -389,34 +389,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(22)),
       ),
-      builder: (_) {
-        return SafeArea(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: 6,
-            itemBuilder: (_, i) {
-              return ListTile(
-                title: Text(
-                  "$i",
-                  style: const TextStyle(
-                    fontFamily: "Montserrat",
-                    fontSize: 16,
-                  ),
-                ),
-                trailing: i == decimalPlaces
-                    ? const Icon(
-                  Icons.check,
-                  color: CupertinoColors.activeBlue,
-                )
-                    : null,
-                onTap: () {
-                  setState(() => decimalPlaces = i);
-                  saveDecimals(i);
-                  notifyChanged();
+      builder: (BuildContext context) {
+        // 🔥 FIX: Added StatefulBuilder so the bottom sheet can update its own UI
+        return StatefulBuilder(
+          builder: (BuildContext context, StateSetter setModalState) {
+            return SafeArea(
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: 13, // 👈 Increased to 13 (0 to 12) so it matches your clamp limit and scrolls
+                itemBuilder: (_, i) {
+                  return ListTile(
+                    title: Text(
+                      "$i",
+                      style: const TextStyle(
+                        fontFamily: "Montserrat",
+                        fontSize: 16,
+                      ),
+                    ),
+                    trailing: i == decimalPlaces
+                        ? const Icon(
+                      Icons.check,
+                      color: CupertinoColors.activeBlue,
+                    )
+                        : null,
+                    onTap: () {
+                      // 1. Update the checkmark inside the bottom sheet
+                      setModalState(() {
+                        decimalPlaces = i;
+                      });
+
+                      // 2. Update the background screen and save to memory
+                      setState(() => decimalPlaces = i);
+                      saveDecimals(i);
+
+                      // OPTIONAL UX TIP: Uncomment the line below to auto-close
+                      // the bottom sheet the moment they tap a number!
+                      // Navigator.pop(context);
+                    },
+                  );
                 },
-              );
-            },
-          ),
+              ),
+            );
+          },
         );
       },
     );

@@ -86,12 +86,12 @@ final List<HomeSection> homeSections = [
     HomeTile("Surface Tension","surface_tension","assets/images/homeIcons/pressureForce/surfaceTension.png"),
   ]),
 
-  HomeSection("Volume & Gas Flow", [
+  HomeSection("Volume & Flow", [
     HomeTile("Volume","volume","assets/images/homeIcons/volume/Volume.png"),
-    HomeTile("Volume Rate Std","volume_rate_std","assets/images/homeIcons/volume/volumeRateStd.png"),
-    HomeTile("Volume Rate Actual","volume_rate_actual","assets/images/homeIcons/volume/volumeRateAct.png"),
-    HomeTile("Volume Rate Liquid","volume_rate_liquid","assets/images/homeIcons/volume/volumeRateLiq.png"),
-    HomeTile("Gas Flow","gas_flow","assets/images/homeIcons/volume/gasFlow.png")
+    HomeTile("Gas Flow Std","flow_standard","assets/images/homeIcons/volume/gasFlow.png"),
+    HomeTile("Gas Flow Actual","flow_actual","assets/images/homeIcons/volume/gasActual.png"),
+    HomeTile("Liquid Flow","flow_liquid","assets/images/homeIcons/volume/volumeRateLiq.png"),
+    //HomeTile("Gas Flow","gas_flow","assets/images/homeIcons/volume/gasFlow.png")
   ]),
 
   HomeSection("Fluid Ratios", [
@@ -154,11 +154,19 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     }
     return key;
   }
-
   @override
   void initState() {
     super.initState();
     filteredSections = homeSections;
+
+    // 🔥 PRELOAD IMAGES (VERY IMPORTANT)
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      for (final section in homeSections) {
+        for (final tile in section.tiles) {
+          precacheImage(AssetImage(tile.iconPath), context);
+        }
+      }
+    });
   }
 
 
@@ -169,6 +177,11 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     debounce?.cancel();
     searchCtrl.dispose();
     searchFocus.dispose();
+
+    // 🔥 CLEAR CACHE (CRITICAL)
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
+
     super.dispose();
   }
 
@@ -190,7 +203,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
     debounce?.cancel();
 
-    debounce = Timer(const Duration(milliseconds:120), () {
+    debounce = Timer(const Duration(milliseconds:300), () {
 
       if (text.isEmpty) {
         setState(() => suggestions = []);
@@ -268,7 +281,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
   void open(UnitSuggestion u) {
 
-    searchFocus.unfocus();
+    //searchFocus.unfocus();
 
     if (!recent.any((r) => r.symbol == u.symbol)) {
       recent.insert(0, u);
@@ -611,12 +624,12 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
       ),
         onTap: () {
         UISound.tap();
-          searchFocus.unfocus();
-
-          setState(() {
-            searchActive = false;
-            suggestions = [];
-          });
+          // searchFocus.unfocus();
+          //
+          // setState(() {
+          //   searchActive = false;
+          //   suggestions = [];
+          // });
 
           open(u);
         }
@@ -657,12 +670,12 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
       ),
         onTap: () {
         UISound.tap();
-          searchFocus.unfocus();
-
-          setState(() {
-            searchActive = false;
-            suggestions = [];
-          });
+          // searchFocus.unfocus();
+          //
+          // setState(() {
+          //   searchActive = false;
+          //   suggestions = [];
+          // });
 
           open(u);
         }
@@ -679,7 +692,12 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
 
-          Image.asset(t.iconPath,height:44,width:44),
+          Image.asset(
+            t.iconPath,
+            height: 44,
+            width: 44,
+            cacheWidth: 88, // 🔥 reduce memory
+          ),
 
           const SizedBox(height:10),
 

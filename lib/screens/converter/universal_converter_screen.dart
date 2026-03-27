@@ -207,10 +207,13 @@ class _UniversalConverterScreenState
 
               // ✅ ADD THIS
               onSettingsChanged: () {
-                if (result.isNotEmpty) {
+                setState(() {
                   isSaved = false;
-                  convert();   // reformat result
-                }
+
+                  if (result.isNotEmpty) {
+                    convert();   // 🔥 refresh even if input not changed
+                  }
+                });
               },
             ),
 
@@ -570,16 +573,19 @@ class _UniversalConverterScreenState
 
   Widget numberRow(List<String> items) {
     return Row(
-      children: items.map((e) => numberKey(e)).toList(),
+      children: items.map((e) =>
+          Expanded(child: numberKey(e))   // ✅ move Expanded HERE
+      ).toList(),
     );
   }
 
   Widget numberKey(String text) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => onKeyTap(text),
-        child: Padding(
-          padding: const EdgeInsets.all(5),
+    return Padding(
+      padding: const EdgeInsets.all(5),
+      child: SizedBox(
+        width: double.infinity,
+        child: GestureDetector(
+          onTap: () => onKeyTap(text),
           child: Container(
             decoration: BoxDecoration(
               color: numBg,
@@ -601,29 +607,26 @@ class _UniversalConverterScreenState
   }
 
   Widget tallKey(String text) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () => onKeyTap(text),
-        child: Container(
-          decoration: BoxDecoration(
-            color: acBg,
-            borderRadius: BorderRadius.circular(18),
-          ),
-          child: Center(
-            child: Text(
-              text,
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.w600,
-                color: Colors.red,
-              ),
+    return GestureDetector(
+      onTap: () => onKeyTap(text),
+      child: Container(
+        decoration: BoxDecoration(
+          color: acBg,
+          borderRadius: BorderRadius.circular(18),
+        ),
+        child: Center(
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 32,
+              fontWeight: FontWeight.w600,
+              color: Colors.red,
             ),
           ),
         ),
       ),
     );
   }
-
   // ================= LOGIC UNCHANGED =================
 
   void onKeyTap(String k) {

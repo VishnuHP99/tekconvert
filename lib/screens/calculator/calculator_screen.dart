@@ -386,7 +386,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
         Container(
           margin: const EdgeInsets.fromLTRB(16, 12, 16, 8),
           padding: const EdgeInsets.all(14),
-          height: 185,
+          height: 210,
           decoration: BoxDecoration(
             color: displayBg,
             borderRadius: BorderRadius.circular(16),
@@ -495,6 +495,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
 
         // ================= KEYPAD =================
         Expanded(
+          flex: 6,
           child: SafeArea(
             top: false,
             child: Padding(
@@ -548,7 +549,7 @@ class _CalculatorScreenState extends State<CalculatorScreen>
 
     return Expanded(
       child: Padding(
-        padding: const EdgeInsets.all(4),
+        padding: const EdgeInsets.all(3),
         child: InkWell(
           borderRadius: BorderRadius.circular(16),
           onTap: () => onTap(text),
