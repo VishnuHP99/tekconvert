@@ -31,6 +31,12 @@ class UnitSuggestion {
   UnitSuggestion(this.name, this.symbol, this.categoryKey);
 }
 
+class UnitPairSuggestion {
+  final UnitSuggestion from;
+  final UnitSuggestion to;
+  UnitPairSuggestion(this.from, this.to);
+}
+
 /// =======================================================
 /// FAST UNIT INDEX
 /// =======================================================
@@ -82,23 +88,24 @@ final List<HomeSection> homeSections = [
 
   HomeSection("Pressure & Force", [
     HomeTile("Pressure","pressure","assets/images/homeIcons/pressureForce/Pressure.png"),
+    HomeTile("Differential Pressure","differential_pressure","assets/images/homeIcons/pressureForce/pressureDelta.png"),
     HomeTile("Force","force","assets/images/homeIcons/pressureForce/force.png"),
     HomeTile("Surface Tension","surface_tension","assets/images/homeIcons/pressureForce/surfaceTension.png"),
   ]),
 
   HomeSection("Volume & Flow", [
     HomeTile("Volume","volume","assets/images/homeIcons/volume/Volume.png"),
-    HomeTile("Gas Flow Std","flow_standard","assets/images/homeIcons/volume/gasFlow.png"),
+    HomeTile("Gas Flow Standard","flow_standard","assets/images/homeIcons/volume/gasFlow.png"),
     HomeTile("Gas Flow Actual","flow_actual","assets/images/homeIcons/volume/gasActual.png"),
     HomeTile("Liquid Flow","flow_liquid","assets/images/homeIcons/volume/volumeRateLiq.png"),
     //HomeTile("Gas Flow","gas_flow","assets/images/homeIcons/volume/gasFlow.png")
   ]),
 
   HomeSection("Fluid Ratios", [
-    HomeTile("CGR","cgr","assets/images/homeIcons/fluidRatios/CGR.png"),
-    HomeTile("GLR","glr","assets/images/homeIcons/fluidRatios/GLR.png"),
-    HomeTile("LGR","lgr","assets/images/homeIcons/fluidRatios/LGR.png"),
-    HomeTile("GOR","gor","assets/images/homeIcons/fluidRatios/GOR.png"),
+    HomeTile("Condensate-Gas Ratio","cgr","assets/images/homeIcons/fluidRatios/CGR.png"),
+    HomeTile("Gas-Liquid Ratio","glr","assets/images/homeIcons/fluidRatios/GLR.png"),
+    HomeTile("Liquid-Gas Ratio","lgr","assets/images/homeIcons/fluidRatios/LGR.png"),
+    HomeTile("Gas-Oil Ratio","gor","assets/images/homeIcons/fluidRatios/GOR.png"),
   ]),
 
   HomeSection("Time", [
@@ -141,6 +148,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
   List<UnitSuggestion> suggestions = [];
   List<UnitSuggestion> recent = [];
+  List<UnitPairSuggestion> pairSuggestions = []; // 👈 NEW
 
   bool searchActive = false;
   late List<HomeSection> filteredSections;
@@ -190,54 +198,317 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     return input
         .toLowerCase()
         .replaceAll(' ', '')        // remove spaces
-        .replaceAll('₂', '2')      // H₂O → H2O
-        .replaceAll('³', '3')      // if ever used
-        .replaceAll('/', '')       // optional (N/m² → Nm²)
-        .replaceAll('²', '2');     // m² → m2
+        // .replaceAll('₂', '2')      // H₂O → H2O
+        // .replaceAll('³', '3')      // if ever used
+        .replaceAll('/', '');       // optional (N/m² → Nm²)
+        // .replaceAll('²', '2');     // m² → m2
   }
 
   void updateSuggestions(String text) {
 
     filterHomeByCategory(text);
 
+    // 🔥 PAIR DETECTION
+    List<UnitPairSuggestion> tempPairs = [];
+
+    final cleaned = text.toLowerCase()
+        .replaceAll(" into ", " to ")
+        .replaceAll("-", " to ");
+    final q = normalize(text);
+
+// 🔥 DETECT CATEGORY INTENT
+    String? forcedCategory;
+
+    if (text.contains("m3") || text.contains("cube") || text.contains("³")) {
+      forcedCategory = "volume";
+    }
+    else if (text.contains("m2") || text.contains("square") || text.contains("²")) {
+      forcedCategory = "area_small";
+    }
+    else if (text.contains("kg/") || text.contains("/m3")) {
+      forcedCategory = "density";
+    }
+    else if (text.trim() == "g" || text.startsWith("g ")) {
+      forcedCategory = "mass";
+    }
+
+    // =======================================================
+    // 🔥 CASE 1 + 2 → WITH "to"
+    // =======================================================
+    if (cleaned.contains("to")) {
+
+      final parts = cleaned.split("to");
+      final fromQuery = normalize(parts[0].trim());
+
+
+      final toQuery = parts.length > 1
+          ? normalize(parts[1].trim())
+          : "";
+
+      final isCubeSearch =
+          text.toLowerCase().contains("3") ||
+              text.toLowerCase().contains("cube");
+
+      final isSquareSearch =
+          text.toLowerCase().contains("2") ||
+              text.toLowerCase().contains("square");
+
+      final fromMatches = allUnitSuggestions.where((u) {
+        final name = normalize(u.name);
+        final symbol = u.symbol;
+        final symbolNormalized = symbol
+            .replaceAll("³", "3")
+            .replaceAll("²", "2")
+            .toLowerCase();
+
+        // 🔥 CATEGORY FILTER (THIS FIXES YOUR BUG)
+        if (forcedCategory != null && u.categoryKey != forcedCategory) {
+          return false;
+        }
+
+        // 🔥 HANDLE CUBE
+        if (isCubeSearch) {
+          return u.categoryKey == "volume" &&
+              (symbol.contains("³") || name.contains("cubic"));
+        }
+
+        // 🔥 HANDLE SQUARE
+        if (isSquareSearch) {
+          return symbol.contains("²") || name.contains("square");
+        }
+
+        return symbolNormalized.startsWith(fromQuery) || name.startsWith(fromQuery);
+      }).toList();
+
+      // ✅ CASE: "km to" → ALL units in same category
+      if (toQuery.isEmpty) {
+
+        for (final f in fromMatches) {
+          final sameCategoryUnits = allUnitSuggestions.where(
+                (u) => u.categoryKey == f.categoryKey && u.symbol != f.symbol,
+          );
+
+          for (final u in sameCategoryUnits) {
+
+            // ✅ forward: m² → km²
+            tempPairs.add(UnitPairSuggestion(f, u));
+
+            // 🔥 reverse: km² → m²
+            tempPairs.add(UnitPairSuggestion(u, f));
+          }
+        }
+
+      }
+
+      // ✅ CASE: "km to m"
+      else {
+
+        final toMatches = allUnitSuggestions.where((u) {
+          final name = normalize(u.name);
+          final symbolNormalized = u.symbol
+              .replaceAll("³", "3")
+              .replaceAll("²", "2")
+              .toLowerCase();
+
+          // 🔥 CATEGORY FILTER
+          if (forcedCategory != null && u.categoryKey != forcedCategory) {
+            return false;
+          }
+
+          return symbolNormalized.startsWith(toQuery) || name.startsWith(toQuery);
+        }).toList();
+
+        for (final f in fromMatches) {
+          for (final t in toMatches) {
+            if (f.categoryKey == t.categoryKey) {
+              tempPairs.add(UnitPairSuggestion(f, t));
+            }
+          }
+        }
+      }
+    }
+
+    // =======================================================
+    // 🔥 CASE 3 → ONLY "km" (NO "to")
+    // =======================================================
+    else {
+
+      final isCubeSearch =
+          text.toLowerCase().contains("3") ||
+              text.toLowerCase().contains("cube");
+
+      final isSquareSearch =
+          text.toLowerCase().contains("2") ||
+              text.toLowerCase().contains("square");
+
+      final fromMatches = allUnitSuggestions.where((u) {
+        final name = normalize(u.name);
+        final symbol = u.symbol;
+        final q = normalize(text);
+        final symbolNormalized = symbol
+            .replaceAll("³", "3")
+            .replaceAll("²", "2")
+            .toLowerCase();
+
+        // 🔥 CATEGORY FILTER (THIS FIXES YOUR BUG)
+        if (forcedCategory != null && u.categoryKey != forcedCategory) {
+          return false;
+        }
+
+        // 🔥 HANDLE CUBE
+        if (isCubeSearch) {
+          return u.categoryKey == "volume" &&
+              (symbol.contains("³") || name.contains("cubic"));
+        }
+
+        // 🔥 HANDLE SQUARE
+        if (isSquareSearch) {
+          return symbol.contains("²") || name.contains("square");
+        }
+
+        return symbolNormalized.startsWith(q) || name.startsWith(q);
+      }).toList();
+
+// 🔥 ADD THIS
+
+
+      final strongMatches = fromMatches.where((u) {
+        final symbol = normalize(u.symbol);
+        return symbol == q || symbol.startsWith(q);
+      }).toList();
+
+
+      for (final f in strongMatches.isNotEmpty ? strongMatches : fromMatches) {
+        final sameCategoryUnits = allUnitSuggestions.where(
+              (u) => u.categoryKey == f.categoryKey && u.symbol != f.symbol,
+        );
+
+        for (final u in sameCategoryUnits) {
+          tempPairs.add(UnitPairSuggestion(f, u));
+        }
+      }
+    }
+
+    // =======================================================
+    // 🔥 NORMAL SUGGESTIONS (EXISTING LOGIC)
+    // =======================================================
 
     debounce?.cancel();
 
-    debounce = Timer(const Duration(milliseconds:300), () {
+    debounce = Timer(const Duration(milliseconds: 300), () {
 
       if (text.isEmpty) {
-        setState(() => suggestions = []);
+        setState(() {
+          suggestions = [];
+          pairSuggestions = []; // 👈 IMPORTANT
+        });
         return;
       }
 
       final q = normalize(text);
 
       final exact = <UnitSuggestion>[];
-      final starts = <UnitSuggestion>[];
+      final symbolExact = <UnitSuggestion>[];   // 🔥 NEW
+      final symbolStarts = <UnitSuggestion>[];  // 🔥 NEW
+      final nameStarts = <UnitSuggestion>[];
       final contains = <UnitSuggestion>[];
+      final isCubeSearch =
+          text.toLowerCase().contains("3") ||
+              text.toLowerCase().contains("m3") ||
+              text.toLowerCase().contains("cube");
+
+      final isSquareSearch =
+          text.toLowerCase().contains("2") ||
+              text.toLowerCase().contains("m2") ||
+              text.toLowerCase().contains("square");
 
       for (final u in allUnitSuggestions) {
         final name = normalize(u.name);
+        final symbolRaw = u.symbol; // ⚠️ DON'T normalize here fully
         final symbol = normalize(u.symbol);
+
+        // 🔥 CUBE SEARCH
+        if (isCubeSearch) {
+          if (u.categoryKey == "volume" &&
+              (symbolRaw.contains("³") || name.contains("cubic"))) {
+            symbolStarts.add(u);
+          }
+          continue;
+        }
+
+        // 🔥 SQUARE SEARCH
+        if (isSquareSearch) {
+          if (symbolRaw.contains("²") || name.contains("square")) {
+            symbolStarts.add(u);
+          }
+          continue;
+        }
+
+        // ===== EXISTING LOGIC =====
 
         if (name == q || symbol == q) {
           exact.add(u);
-        } else if (symbol.startsWith(q) || name.startsWith(q)) {
-          starts.add(u);
-        } else if (name.contains(q) || symbol.contains(q)) { // 👈 ADD THIS ALSO
+        }
+        else if (symbol == q) {
+          symbolExact.add(u);
+        }
+        else if (symbol.startsWith(q)) {
+          symbolStarts.add(u);
+        }
+        else if (name.startsWith(q)) {
+          nameStarts.add(u);
+        }
+        else if (name.contains(q) || symbol.contains(q)) {
           contains.add(u);
         }
       }
 
-// Combine in priority order
       final matches = [
-        ...exact,
-        ...starts,
+        ...symbolExact,   // m
+        ...symbolStarts,  // m², m³, mm
+        ...exact,         // meter
+        ...nameStarts,
         ...contains,
-      ].take(40).toList();
+      ].toList();
+
+// 🔥 CRITICAL FIX — SORT AFTER MERGE
+      matches.sort((a, b) {
+
+        final aSym = a.symbol.toLowerCase();
+        final bSym = b.symbol.toLowerCase();
+
+        // ✅ exact symbol first (m)
+        if (aSym == q && bSym != q) return -1;
+        if (bSym == q && aSym != q) return 1;
+
+        // ✅ shorter symbols first (m before cm)
+        if (aSym.length != bSym.length) {
+          return aSym.length.compareTo(bSym.length);
+        }
+
+        // fallback
+        return aSym.compareTo(bSym);
+      });
+
+      final finalMatches = matches.take(40).toList();
 
       setState(() {
-        suggestions = matches;
+        suggestions = finalMatches;
+
+        // 🔥 LIMIT (important for performance)
+        final q = normalize(text);
+
+// 🔥 FILTER BEST MATCHES ONLY
+        final filteredPairs = tempPairs.where((p) {
+          final symbol = normalize(p.from.symbol);
+          return symbol == q || symbol.startsWith(q);
+        }).toList();
+
+// 🔥 fallback if nothing matched strongly
+        pairSuggestions = (filteredPairs.isNotEmpty
+            ? filteredPairs
+            : tempPairs).take(25).toList();
+
         searchActive = true;
       });
     });
@@ -312,6 +583,38 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     }
 
     debugPrint("Category not found for: ${u.categoryKey}");
+  }
+
+  void openPair(UnitPairSuggestion p) {
+
+    if (!recent.any((r) => r.symbol == p.from.symbol)) {
+      recent.insert(0, p.from);
+      if (recent.length > 6) recent.removeLast();
+    }
+
+    for (final s in homeSections) {
+      for (final t in s.tiles) {
+
+        if (t.key == p.from.categoryKey) {
+
+          FocusManager.instance.primaryFocus?.unfocus();
+
+          Navigator.push(
+            context,
+            CupertinoPageRoute(
+              builder: (_) => UniversalConverterScreen(
+                title: t.title,
+                categoryKey: t.key,
+                initialFromUnit: p.from.symbol,
+                initialToUnit: p.to.symbol, // 👈 THIS IS THE MAIN UPGRADE
+              ),
+            ),
+          );
+
+          return;
+        }
+      }
+    }
   }
 
 
@@ -405,7 +708,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
                 searchBar(),
 
                 if(searchActive &&
-                    (recent.isNotEmpty || suggestions.isNotEmpty))
+                    (recent.isNotEmpty || suggestions.isNotEmpty || pairSuggestions.isNotEmpty))
                   panel(),
               ],
             ),
@@ -538,6 +841,15 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             header("Recently Searched", clear: true),
 
           ...recent.map(recentRow),
+              if (pairSuggestions.isNotEmpty)
+                header(
+                  pairSuggestions.first.from.symbol.isNotEmpty
+                      ? "Quick Conversions from ${pairSuggestions.first.from.symbol}"
+                      : "Quick Conversions",
+                ),
+//
+
+              ...pairSuggestions.map(pairRow),
 
           if (suggestions.isNotEmpty)
             header("Suggestions"),
@@ -679,6 +991,39 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
           open(u);
         }
+    );
+  }
+
+  Widget pairRow(UnitPairSuggestion p) {
+    final theme = Theme.of(context);
+
+    return ListTile(
+      dense: true,
+      title: Text(
+        "${p.from.name} → ${p.to.name}",
+        style: TextStyle(
+          color: theme.colorScheme.onSurface,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      subtitle: Text(
+        getCategoryTitle(p.from.categoryKey),
+        style: TextStyle(
+          fontSize: 11,
+          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+        ),
+      ),
+      trailing: Text(
+        "${p.from.symbol} → ${p.to.symbol}",
+        style: TextStyle(
+          fontWeight: FontWeight.w600,
+          color: theme.colorScheme.primary,
+        ),
+      ),
+      onTap: () {
+        UISound.tap();
+        openPair(p); // 👈 NEW FUNCTION
+      },
     );
   }
 

@@ -181,8 +181,8 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s":"atm (A)", "f":"atmosphere absolute"},
     {"s":"atm (G)", "f":"atmosphere gauge"},
     {"s":"bar", "f":"bar"},
-    {"s":"bara", "f":"bar absolute"},
-    {"s":"barg", "f":"bar gauge"},
+    {"s":"bar(A)", "f":"bar absolute"},
+    {"s":"bar(G)", "f":"bar gauge"},
     {"s":"cm H₂O", "f":"centimeter of water (4°C)"},
     {"s":"cmHg", "f":"centimeter of mercury (0°C)"},
     {"s":"ft H₂O", "f":"foot of water (4°C)"},
@@ -210,6 +210,38 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s":"psia", "f":"pound per square inch absolute"},
     {"s":"psig", "f":"pound per square inch gauge"},
     {"s":"torr", "f":"torr"},
+  ],
+
+  //Differential Pressure
+  "differential_pressure": [
+    {"s":"Pa (Δ)", "f":"pascal differential"},
+    {"s":"N/m² (Δ)", "f":"newton per square meter differential"},
+    {"s":"hPa (Δ)", "f":"hectopascal differential"},
+    {"s":"kPa (Δ)", "f":"kilopascal differential"},
+    {"s":"MPa (Δ)", "f":"megapascal differential"},
+
+    {"s":"bar (Δ)", "f":"bar differential"},
+    {"s":"mbar (Δ)", "f":"millibar differential"},
+    {"s":"atm (Δ)", "f":"standard atmosphere differential"},
+    {"s":"at (Δ)", "f":"technical atmosphere differential"},
+
+    {"s":"psi (Δ)", "f":"pound per square inch differential"},
+    {"s":"psf (Δ)", "f":"pound per square foot differential"},
+    {"s":"ksi (Δ)", "f":"kilopound per square inch differential"},
+
+    {"s":"mmHg (Δ)", "f":"millimeter of mercury differential"},
+    {"s":"cmHg (Δ)", "f":"centimeter of mercury differential"},
+    {"s":"inHg (Δ)", "f":"inch of mercury differential"},
+    {"s":"torr (Δ)", "f":"torr differential"},
+
+    {"s":"mm H₂O (Δ)", "f":"millimeter of water differential"},
+    {"s":"cm H₂O (Δ)", "f":"centimeter of water differential"},
+    {"s":"m H₂O (Δ)", "f":"meter of water differential"},
+    {"s":"in H₂O (Δ)", "f":"inch of water differential"},
+    {"s":"ft H₂O (Δ)", "f":"foot of water differential"},
+
+    {"s":"kgf/cm² (Δ)", "f":"kilogram-force per cm² differential"},
+    {"s":"kgf/m² (Δ)", "f":"kilogram-force per m² differential"},
   ],
 
 // ---------- FORCE ----------
@@ -383,6 +415,9 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
 
 // ---------- FLOW RATE – STANDARD ----------
   "flow_standard": [
+    {"s": "mmscm/d", "f": "million std cubic meter/day"},
+    {"s": "scm/h", "f": "standard cubic meter/hour"},
+    {"s": "scm/d", "f": "standard cubic meter per day"},
     {"s": "Sm³/s", "f": "standard m³/s"},
     {"s": "Sm³/min", "f": "standard m³/min"},     // 🔥 added
     {"s": "Sm³/h", "f": "standard m³/h"},         // 🔥 added
@@ -394,23 +429,24 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s": "Nm³/d", "f": "normal m³/day"},
     {"s": "MNm³/d", "f": "million Nm³/day"},
 
-    {"s": "scf/s", "f": "std cubic ft/s"},        // 🔥 added
-    {"s": "scf/m", "f": "std cubic ft/min"},
-    {"s": "scf/h", "f": "std cubic ft/h"},
-    {"s": "scf/d", "f": "std cubic ft/day"},      // 🔥 added
+    {"s": "scf/s", "f": "standard cubic ft/s"},        // 🔥 added
+    {"s": "scf/m", "f": "standard cubic ft/min"},
+    {"s": "scf/h", "f": "standard cubic ft/h"},
+    {"s": "scf/d", "f": "standard cubic ft/day"},      // 🔥 added
 
     {"s": "Mscf/d", "f": "thousand scf/day"},
     {"s": "MMscf/d", "f": "million scf/day"},
     {"s": "Bscf/y", "f": "billion scf/year"},
 
-    {"s": "Sl/s", "f": "std liter/s"},            // 🔥 added
-    {"s": "Sl/m", "f": "std liter/min"},
-    {"s": "Sl/h", "f": "std liter/h"},
+    {"s": "Sl/s", "f": "standard liter/s"},            // 🔥 added
+    {"s": "Sl/m", "f": "standard liter/min"},
+    {"s": "Sl/h", "f": "standard liter/h"},
 
     {"s": "Sm³/hr @ 59°F", "f": "std m³/hr @ 15°C"},     // 🔥 moved
     {"s": "MSm³/hr @ 59°F", "f": "million std m³/hr"},  // 🔥 moved
     {"s": "MSm³/d @ 59°F", "f": "million std m³/day"},  // 🔥 moved
     {"s": "Nm³/hr @ 32°F", "f": "normal m³/hr @ 0°C"}, // 🔥 moved
+
   ],
 
 

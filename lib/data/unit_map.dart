@@ -232,6 +232,44 @@ final Map<String, Map<String, double>> unitMap = {
     "kg/cm² (A)": 98066.5,
     "kgf/m²": 9.80665
   },
+
+  // Differential Pressure
+  "differential_pressure": {
+    // ===== SI =====
+    "Pa (Δ)": 1.0,
+    "N/m² (Δ)": 1.0,
+    "hPa (Δ)": 100.0,
+    "kPa (Δ)": 1000.0,
+    "MPa (Δ)": 1000000.0,
+
+    // ===== BAR & ATM =====
+    "bar (Δ)": 100000.0,
+    "mbar (Δ)": 100.0,
+    "atm (Δ)": 101325.0,
+    "at (Δ)": 98066.5,
+
+    // ===== IMPERIAL =====
+    "psi (Δ)": 6894.757293168361,
+    "psf (Δ)": 47.88025898033584,
+    "ksi (Δ)": 6894757.293168361,
+
+    // ===== MERCURY =====
+    "mmHg (Δ)": 133.322387415,
+    "cmHg (Δ)": 1333.22387415,
+    "inHg (Δ)": 3386.388640341,
+    "torr (Δ)": 133.32236842105263,
+
+    // ===== WATER =====
+    "mm H₂O (Δ)": 9.80665,
+    "cm H₂O (Δ)": 98.0665,
+    "m H₂O (Δ)": 9806.65,
+    "in H₂O (Δ)": 249.08891,
+    "ft H₂O (Δ)": 2989.06692,
+
+    // ===== FORCE/AREA =====
+    "kgf/cm² (Δ)": 98066.5,
+    "kgf/m² (Δ)": 9.80665
+  },
 // ================= FORCE =================
 // Base: Newton
   "force": {
@@ -415,6 +453,10 @@ final Map<String, Map<String, double>> unitMap = {
 // ================= FLOW RATE – STANDARD =================
 // Base: m³/s //how fast normalized gas
   "flow_standard": {
+    "mmsc/d": (1e6) / 86400,     // million Sm³ per day → Sm³/s
+    "scm/h": 1 / 3600,           // standard m³/hour → Sm³/s
+    "scm/d": 1 / 86400,
+
     "Sm³/s": 1.0,
     "Sm³/min": 1/60,
     "Sm³/h": 1/3600,

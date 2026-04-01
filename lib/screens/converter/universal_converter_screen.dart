@@ -154,11 +154,12 @@ class _UniversalConverterScreenState
 
     loadHistory();
     // 🔥 Auto run convert when coming from Saved screen
-    if (widget.initialValue != null) {
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.initialValue != null) {
+        inputController.text = widget.initialValue!;
         convert();
-      });
-    }
+      }
+    });
 
   }
 
@@ -394,7 +395,10 @@ class _UniversalConverterScreenState
                             height: 36,
                             width: 130,
                             decoration: BoxDecoration(
-                              color: Theme.of(context).colorScheme.primary,
+                              // 🔥 Set a specific, vibrant color for dark mode to contrast with white text
+                              color: Theme.of(context).brightness == Brightness.dark
+                                  ? const Color(0xFF0A84FF) // A punchy, vivid blue for dark mode
+                                  : Theme.of(context).colorScheme.primary,
                               borderRadius: BorderRadius.circular(20),
                               boxShadow: const [
                                 BoxShadow(
@@ -584,13 +588,12 @@ class _UniversalConverterScreenState
       padding: const EdgeInsets.all(5),
       child: SizedBox(
         width: double.infinity,
-        child: GestureDetector(
-          onTap: () => onKeyTap(text),
-          child: Container(
-            decoration: BoxDecoration(
-              color: numBg,
-              borderRadius: BorderRadius.circular(16),
-            ),
+        child: Material( // 🔥 Use Material for the background color
+          color: numBg,
+          borderRadius: BorderRadius.circular(16),
+          child: InkWell( // 🔥 Put InkWell inside Material for the ripple
+            onTap: () => onKeyTap(text),
+            borderRadius: BorderRadius.circular(16),
             child: Center(
               child: Text(
                 text,
@@ -607,13 +610,12 @@ class _UniversalConverterScreenState
   }
 
   Widget tallKey(String text) {
-    return GestureDetector(
-      onTap: () => onKeyTap(text),
-      child: Container(
-        decoration: BoxDecoration(
-          color: acBg,
-          borderRadius: BorderRadius.circular(18),
-        ),
+    return Material( // 🔥 Replaced GestureDetector & Container
+      color: acBg,
+      borderRadius: BorderRadius.circular(18),
+      child: InkWell( // 🔥 Added InkWell
+        onTap: () => onKeyTap(text),
+        borderRadius: BorderRadius.circular(18),
         child: Center(
           child: Text(
             text,
@@ -1176,6 +1178,10 @@ class _UniversalConverterScreenState
                 // ✅ Insert fresh copy at top
                 final tagged = "${widget.categoryKey}||$result";
                 saved.insert(0, tagged);
+                // 🔥 ADD THIS BLOCK
+                if (saved.length > 50) {
+                  saved = saved.sublist(0, 50);
+                }
 
                 await prefs.setStringList("universal_saved", saved);
 

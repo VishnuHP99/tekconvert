@@ -447,11 +447,11 @@ class _CalculatorScreenState extends State<CalculatorScreen>
                     );
 
                     if (result is String) {
+                      rawExpression = result; // 🔥 ADD THIS: Sync the background logic!
                       _controller.text = result;
                       _controller.selection =
-                          TextSelection.collapsed(
-                              offset: result.length);
-                      previewResult = "";
+                          TextSelection.collapsed(offset: result.length);
+                      updatePreview(); // 🔥 ADD THIS: Automatically show preview if it has operators
                       setState(() {});
                     }
 
@@ -550,15 +550,13 @@ class _CalculatorScreenState extends State<CalculatorScreen>
     return Expanded(
       child: Padding(
         padding: const EdgeInsets.all(3),
-        child: InkWell(
+        child: Material( // 🔥 Change 1: Use Material instead of InkWell here
+          color: bg,     // 🔥 Move the background color to the Material
           borderRadius: BorderRadius.circular(16),
-          onTap: () => onTap(text),
-          child: Container(
-            decoration: BoxDecoration(
-              color: bg,
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Center(
+          child: InkWell( // 🔥 Change 2: Put InkWell inside the Material
+            borderRadius: BorderRadius.circular(16),
+            onTap: () => onTap(text),
+            child: Center( // 🔥 Removed the inner Container completely
               child: Text(
                 text,
                 style: TextStyle(
