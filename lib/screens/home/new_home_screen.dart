@@ -21,8 +21,10 @@ class HomeSection {
 class HomeTile {
   final String title;
   final String key;
-  final String iconPath;
-  HomeTile(this.title, this.key, this.iconPath);
+  final IconData icon;
+  final Color color;
+
+  HomeTile(this.title, this.key, this.icon, this.color);
 }
 
 class UnitSuggestion {
@@ -64,69 +66,68 @@ final List<UnitSuggestion> allUnitSuggestions = (() {
 final List<HomeSection> homeSections = [
 
   HomeSection("Length & Geometry", [
-    HomeTile("Length","length","assets/images/homeIcons/lengthGeometry/length.webp"),
-    HomeTile("Area Small","area_small","assets/images/homeIcons/lengthGeometry/areaSmall.webp"),
-    HomeTile("Area Large","area_large","assets/images/homeIcons/lengthGeometry/areaLarge.webp"),
-    HomeTile("Acceleration","acceleration","assets/images/homeIcons/lengthGeometry/acceleration.webp"),
-    HomeTile("Velocity","velocity","assets/images/homeIcons/lengthGeometry/velocity.webp"),
+    HomeTile("Length","length", Icons.straighten, Colors.blue),
+    HomeTile("Area Small","area_small", Icons.crop_square, Colors.teal),
+    HomeTile("Area Large","area_large", Icons.crop_free, Colors.cyan),
+    HomeTile("Acceleration","acceleration", Icons.speed, Colors.orange),
+    HomeTile("Velocity","velocity", Icons.trending_up, Colors.green),
   ]),
 
   HomeSection("Mass & Density", [
-    HomeTile("Mass","mass","assets/images/homeIcons/massDensity/mass.webp"),
-    HomeTile("Mass Rate","mass_rate","assets/images/homeIcons/massDensity/massRate.webp"),
-    HomeTile("Density","density","assets/images/homeIcons/massDensity/density.webp"),
+    HomeTile("Mass","mass", Icons.scale, Colors.indigo),
+    HomeTile("Mass Rate","mass_rate", Icons.timeline, Colors.deepPurple),
+    HomeTile("Density","density", Icons.bubble_chart, Colors.purple),
   ]),
 
   HomeSection("Thermal & Energy", [
-    HomeTile("Temperature","temperature","assets/images/homeIcons/thermalEnergy/temperature.webp"),
-    HomeTile("Energy","energy","assets/images/homeIcons/thermalEnergy/energy.webp"),
-    HomeTile("Energy Rate","energy_rate","assets/images/homeIcons/thermalEnergy/energyRate.webp"),
-    HomeTile("Heat Capacity","heat_capacity","assets/images/homeIcons/thermalEnergy/heatCapacity.webp"),
-    HomeTile("Heating Value (Mass)","heating_mass","assets/images/homeIcons/thermalEnergy/heatingMass.webp"),
-    HomeTile("Heating Value (Volume)","heating_volume","assets/images/homeIcons/thermalEnergy/heatingVolume.webp"),
-    HomeTile("Thermal Conductivity","thermal_conductivity","assets/images/homeIcons/thermalEnergy/thermalConductivity.webp"),
+    HomeTile("Temperature","temperature", Icons.thermostat, Colors.red),
+    HomeTile("Energy","energy", Icons.bolt, Colors.amber),
+    HomeTile("Energy Rate","energy_rate", Icons.flash_on, Colors.orangeAccent),
+    HomeTile("Heat Capacity","heat_capacity", Icons.local_fire_department, Colors.deepOrange),
+    HomeTile("Heating Value (Mass)","heating_mass", Icons.whatshot, Colors.redAccent),
+    HomeTile("Heating Value (Volume)","heating_volume", Icons.local_fire_department, Colors.orange),
+    HomeTile("Thermal Conductivity","thermal_conductivity", Icons.blur_on, Colors.pink),
   ]),
 
   HomeSection("Pressure & Force", [
-    HomeTile("Pressure","pressure","assets/images/homeIcons/pressureForce/Pressure.webp"),
-    HomeTile("Differential Pressure","differential_pressure","assets/images/homeIcons/pressureForce/pressureDelta.webp"),
-    HomeTile("Force","force","assets/images/homeIcons/pressureForce/force.webp"),
-    HomeTile("Surface Tension","surface_tension","assets/images/homeIcons/pressureForce/surfaceTension.webp"),
+    HomeTile("Pressure","pressure", Icons.compress, Colors.blueGrey),
+    HomeTile("Differential Pressure","differential_pressure", Icons.swap_vert, Colors.grey),
+    HomeTile("Force","force", Icons.fitness_center, Colors.brown),
+    HomeTile("Surface Tension","surface_tension", Icons.water, Colors.lightBlue),
   ]),
 
   HomeSection("Volume & Flow", [
-    HomeTile("Volume","volume","assets/images/homeIcons/volume/Volume.webp"),
-    HomeTile("Gas Flow Standard","flow_standard","assets/images/homeIcons/volume/gasFlow.webp"),
-    HomeTile("Gas Flow Actual","flow_actual","assets/images/homeIcons/volume/gasActual.webp"),
-    HomeTile("Liquid Flow","flow_liquid","assets/images/homeIcons/volume/volumeRateLiq.webp"),
-    //HomeTile("Gas Flow","gas_flow","assets/images/homeIcons/volume/gasFlow.png")
+    HomeTile("Volume","volume", Icons.invert_colors, Colors.blue),
+    HomeTile("Gas Flow Standard","flow_standard", Icons.air, Colors.teal),
+    HomeTile("Gas Flow Actual","flow_actual", Icons.wind_power, Colors.green),
+    HomeTile("Liquid Flow","flow_liquid", Icons.water_drop, Colors.lightBlueAccent),
   ]),
 
   HomeSection("Fluid Ratios", [
-    HomeTile("Condensate-Gas Ratio","cgr","assets/images/homeIcons/fluidRatios/CGR.webp"),
-    HomeTile("Gas-Liquid Ratio","glr","assets/images/homeIcons/fluidRatios/GLR.webp"),
-    HomeTile("Liquid-Gas Ratio","lgr","assets/images/homeIcons/fluidRatios/LGR.webp"),
-    HomeTile("Gas-Oil Ratio","gor","assets/images/homeIcons/fluidRatios/GOR.webp"),
+    HomeTile("Condensate-Gas Ratio","cgr", Icons.compare_arrows, Colors.deepPurple),
+    HomeTile("Gas-Liquid Ratio","glr", Icons.sync_alt, Colors.indigo),
+    HomeTile("Liquid-Gas Ratio","lgr", Icons.swap_horiz, Colors.purple),
+    HomeTile("Gas-Oil Ratio","gor", Icons.merge_type, Colors.blueAccent),
   ]),
 
   HomeSection("Time", [
-    HomeTile("Time Large","time_large","assets/images/homeIcons/time/timeLarge.webp"),
-    HomeTile("Time Small","time_small","assets/images/homeIcons/time/timeSmall.webp"),
+    HomeTile("Time Large","time_large", Icons.access_time, Colors.blueGrey),
+    HomeTile("Time Small","time_small", Icons.timer, Colors.grey),
   ]),
 
   HomeSection("Viscosity", [
-    HomeTile("Dynamic Viscosity","viscosity_dynamic","assets/images/homeIcons/viscosity/dynamicViscosity.webp"),
-    HomeTile("Kinematic Viscosity","viscosity_kinematic","assets/images/homeIcons/viscosity/kinematicViscosity.webp"),
+    HomeTile("Dynamic Viscosity","viscosity_dynamic", Icons.blur_on, Colors.cyan),
+    HomeTile("Kinematic Viscosity","viscosity_kinematic", Icons.grain, Colors.teal),
   ]),
 
   HomeSection("Power & Heat Transfer", [
-    HomeTile("Power","power","assets/images/homeIcons/powerHeat/Power.webp"),
-    HomeTile("Heat Transfer","heat_transfer","assets/images/homeIcons/powerHeat/HeatTransfer.webp"),
+    HomeTile("Power","power", Icons.flash_on, Colors.yellow.shade700),
+    HomeTile("Heat Transfer","heat_transfer", Icons.local_fire_department, Colors.red),
   ]),
 
   HomeSection("Speed & Torque", [
-    HomeTile("Speed","speed","assets/images/homeIcons/speedTorque/Speed.webp"),
-    HomeTile("Torque","torque","assets/images/homeIcons/speedTorque/Torque.webp"),
+    HomeTile("Speed","speed", Icons.speed, Colors.orange),
+    HomeTile("Torque","torque", Icons.settings, Colors.blueGrey),
   ]),
 ];
 
@@ -173,6 +174,21 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
 
     // 🔥 PRELOAD IMAGES (VERY IMPORTANT)
 
+  }
+  Future<void> _handleAppUpdate() async {
+    final prefs = await SharedPreferences.getInstance();
+    final packageInfo = await PackageInfo.fromPlatform();
+
+    final currentVersion = packageInfo.version;
+    final lastVersion = prefs.getString("app_version");
+
+    if (lastVersion != currentVersion) {
+      // 🔥 CLEAR ONLY ON UPDATE
+      PaintingBinding.instance.imageCache.clear();
+      PaintingBinding.instance.imageCache.clearLiveImages();
+
+      await prefs.setString("app_version", currentVersion);
+    }
   }
 
 
@@ -341,7 +357,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
       final fromMatches = allUnitSuggestions.where((u) {
         final name = normalize(u.name);
         final symbol = u.symbol;
-        final q = normalize(text);
+
         final symbolNormalized = symbol
             .replaceAll("³", "3")
             .replaceAll("²", "2")
@@ -1034,13 +1050,18 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
 
-          Image.asset(
-            t.iconPath,
+          Container(
             height: 44,
             width: 44,
-            cacheWidth: 64, // 🔥 reduce more
-
-            // filterQuality: FilterQuality.low, // 🔥 important
+            decoration: BoxDecoration(
+              color: t.color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(
+              t.icon,
+              color: t.color,
+              size: 26,
+            ),
           ),
 
           const SizedBox(height:10),
@@ -1069,21 +1090,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   }
 
 }
-Future<void> _handleAppUpdate() async {
-  final prefs = await SharedPreferences.getInstance();
-  final packageInfo = await PackageInfo.fromPlatform();
 
-  final currentVersion = packageInfo.version;
-  final lastVersion = prefs.getString("app_version");
-
-  if (lastVersion != currentVersion) {
-    // 🔥 CLEAR ONLY ON UPDATE
-    PaintingBinding.instance.imageCache.clear();
-    PaintingBinding.instance.imageCache.clearLiveImages();
-
-    await prefs.setString("app_version", currentVersion);
-  }
-}
 
 /// =======================================================
 /// PRESS EFFECT
