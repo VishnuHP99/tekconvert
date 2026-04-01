@@ -165,16 +165,15 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   @override
   void initState() {
     super.initState();
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
+
+    PaintingBinding.instance.imageCache.maximumSize = 100;
+    PaintingBinding.instance.imageCache.maximumSizeBytes = 15 << 20; // 🔥 BEST
     filteredSections = homeSections;
 
     // 🔥 PRELOAD IMAGES (VERY IMPORTANT)
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      for (final section in homeSections) {
-        for (final tile in section.tiles) {
-          precacheImage(AssetImage(tile.iconPath), context);
-        }
-      }
-    });
+
   }
 
 
@@ -186,9 +185,8 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     searchCtrl.dispose();
     searchFocus.dispose();
 
-    // 🔥 CLEAR CACHE (CRITICAL)
-    PaintingBinding.instance.imageCache.clear();
-    PaintingBinding.instance.imageCache.clearLiveImages();
+    
+
 
     super.dispose();
   }
@@ -1041,7 +1039,8 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             t.iconPath,
             height: 44,
             width: 44,
-            cacheWidth: 88, // 🔥 reduce memory
+            cacheWidth: 64, // 🔥 reduce more
+            filterQuality: FilterQuality.low, // 🔥 important
           ),
 
           const SizedBox(height:10),
