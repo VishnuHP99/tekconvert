@@ -1040,7 +1040,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             height: 44,
             width: 44,
             cacheWidth: 64, // 🔥 reduce more
-            filterQuality: FilterQuality.low, // 🔥 important
+            // filterQuality: FilterQuality.low, // 🔥 important
           ),
 
           const SizedBox(height:10),
