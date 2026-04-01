@@ -5,7 +5,8 @@ import 'package:flutter/services.dart';
 import '../converter/universal_converter_screen.dart';
 import '../../data/unit_definitions.dart';
 import '../../core/utils/ui_sound.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 /// =======================================================
 /// MODELS
@@ -165,9 +166,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
   @override
   void initState() {
     super.initState();
-    PaintingBinding.instance.imageCache.clear();
-    PaintingBinding.instance.imageCache.clearLiveImages();
-
+    _handleAppUpdate();
     PaintingBinding.instance.imageCache.maximumSize = 100;
     PaintingBinding.instance.imageCache.maximumSizeBytes = 15 << 20; // 🔥 BEST
     filteredSections = homeSections;
@@ -1040,6 +1039,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             height: 44,
             width: 44,
             cacheWidth: 64, // 🔥 reduce more
+            cacheHeight: 64,
             // filterQuality: FilterQuality.low, // 🔥 important
           ),
 
@@ -1068,6 +1068,21 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     );
   }
 
+}
+Future<void> _handleAppUpdate() async {
+  final prefs = await SharedPreferences.getInstance();
+  final packageInfo = await PackageInfo.fromPlatform();
+
+  final currentVersion = packageInfo.version;
+  final lastVersion = prefs.getString("app_version");
+
+  if (lastVersion != currentVersion) {
+    // 🔥 CLEAR ONLY ON UPDATE
+    PaintingBinding.instance.imageCache.clear();
+    PaintingBinding.instance.imageCache.clearLiveImages();
+
+    await prefs.setString("app_version", currentVersion);
+  }
 }
 
 /// =======================================================
