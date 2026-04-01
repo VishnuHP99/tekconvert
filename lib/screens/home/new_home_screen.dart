@@ -64,69 +64,69 @@ final List<UnitSuggestion> allUnitSuggestions = (() {
 final List<HomeSection> homeSections = [
 
   HomeSection("Length & Geometry", [
-    HomeTile("Length","length","assets/images/homeIcons/lengthGeometry/length.png"),
-    HomeTile("Area Small","area_small","assets/images/homeIcons/lengthGeometry/areaSmall.png"),
-    HomeTile("Area Large","area_large","assets/images/homeIcons/lengthGeometry/areaLarge.png"),
-    HomeTile("Acceleration","acceleration","assets/images/homeIcons/lengthGeometry/acceleration.png"),
-    HomeTile("Velocity","velocity","assets/images/homeIcons/lengthGeometry/velocity.png"),
+    HomeTile("Length","length","assets/images/homeIcons/lengthGeometry/length.webp"),
+    HomeTile("Area Small","area_small","assets/images/homeIcons/lengthGeometry/areaSmall.webp"),
+    HomeTile("Area Large","area_large","assets/images/homeIcons/lengthGeometry/areaLarge.webp"),
+    HomeTile("Acceleration","acceleration","assets/images/homeIcons/lengthGeometry/acceleration.webp"),
+    HomeTile("Velocity","velocity","assets/images/homeIcons/lengthGeometry/velocity.webp"),
   ]),
 
   HomeSection("Mass & Density", [
-    HomeTile("Mass","mass","assets/images/homeIcons/massDensity/mass.png"),
-    HomeTile("Mass Rate","mass_rate","assets/images/homeIcons/massDensity/massRate.png"),
-    HomeTile("Density","density","assets/images/homeIcons/massDensity/density.png"),
+    HomeTile("Mass","mass","assets/images/homeIcons/massDensity/mass.webp"),
+    HomeTile("Mass Rate","mass_rate","assets/images/homeIcons/massDensity/massRate.webp"),
+    HomeTile("Density","density","assets/images/homeIcons/massDensity/density.webp"),
   ]),
 
   HomeSection("Thermal & Energy", [
-    HomeTile("Temperature","temperature","assets/images/homeIcons/thermalEnergy/temperature.png"),
-    HomeTile("Energy","energy","assets/images/homeIcons/thermalEnergy/energy.png"),
-    HomeTile("Energy Rate","energy_rate","assets/images/homeIcons/thermalEnergy/energyRate.png"),
-    HomeTile("Heat Capacity","heat_capacity","assets/images/homeIcons/thermalEnergy/heatCapacity.png"),
-    HomeTile("Heating Value (Mass)","heating_mass","assets/images/homeIcons/thermalEnergy/heatingMass.png"),
-    HomeTile("Heating Value (Volume)","heating_volume","assets/images/homeIcons/thermalEnergy/heatingVolume.png"),
-    HomeTile("Thermal Conductivity","thermal_conductivity","assets/images/homeIcons/thermalEnergy/thermalConductivity.png"),
+    HomeTile("Temperature","temperature","assets/images/homeIcons/thermalEnergy/temperature.webp"),
+    HomeTile("Energy","energy","assets/images/homeIcons/thermalEnergy/energy.webp"),
+    HomeTile("Energy Rate","energy_rate","assets/images/homeIcons/thermalEnergy/energyRate.webp"),
+    HomeTile("Heat Capacity","heat_capacity","assets/images/homeIcons/thermalEnergy/heatCapacity.webp"),
+    HomeTile("Heating Value (Mass)","heating_mass","assets/images/homeIcons/thermalEnergy/heatingMass.webp"),
+    HomeTile("Heating Value (Volume)","heating_volume","assets/images/homeIcons/thermalEnergy/heatingVolume.webp"),
+    HomeTile("Thermal Conductivity","thermal_conductivity","assets/images/homeIcons/thermalEnergy/thermalConductivity.webp"),
   ]),
 
   HomeSection("Pressure & Force", [
-    HomeTile("Pressure","pressure","assets/images/homeIcons/pressureForce/Pressure.png"),
-    HomeTile("Differential Pressure","differential_pressure","assets/images/homeIcons/pressureForce/pressureDelta.png"),
-    HomeTile("Force","force","assets/images/homeIcons/pressureForce/force.png"),
-    HomeTile("Surface Tension","surface_tension","assets/images/homeIcons/pressureForce/surfaceTension.png"),
+    HomeTile("Pressure","pressure","assets/images/homeIcons/pressureForce/Pressure.webp"),
+    HomeTile("Differential Pressure","differential_pressure","assets/images/homeIcons/pressureForce/pressureDelta.webp"),
+    HomeTile("Force","force","assets/images/homeIcons/pressureForce/force.webp"),
+    HomeTile("Surface Tension","surface_tension","assets/images/homeIcons/pressureForce/surfaceTension.webp"),
   ]),
 
   HomeSection("Volume & Flow", [
-    HomeTile("Volume","volume","assets/images/homeIcons/volume/Volume.png"),
-    HomeTile("Gas Flow Standard","flow_standard","assets/images/homeIcons/volume/gasFlow.png"),
-    HomeTile("Gas Flow Actual","flow_actual","assets/images/homeIcons/volume/gasActual.png"),
-    HomeTile("Liquid Flow","flow_liquid","assets/images/homeIcons/volume/volumeRateLiq.png"),
+    HomeTile("Volume","volume","assets/images/homeIcons/volume/Volume.webp"),
+    HomeTile("Gas Flow Standard","flow_standard","assets/images/homeIcons/volume/gasFlow.webp"),
+    HomeTile("Gas Flow Actual","flow_actual","assets/images/homeIcons/volume/gasActual.webp"),
+    HomeTile("Liquid Flow","flow_liquid","assets/images/homeIcons/volume/volumeRateLiq.webp"),
     //HomeTile("Gas Flow","gas_flow","assets/images/homeIcons/volume/gasFlow.png")
   ]),
 
   HomeSection("Fluid Ratios", [
-    HomeTile("Condensate-Gas Ratio","cgr","assets/images/homeIcons/fluidRatios/CGR.png"),
-    HomeTile("Gas-Liquid Ratio","glr","assets/images/homeIcons/fluidRatios/GLR.png"),
-    HomeTile("Liquid-Gas Ratio","lgr","assets/images/homeIcons/fluidRatios/LGR.png"),
-    HomeTile("Gas-Oil Ratio","gor","assets/images/homeIcons/fluidRatios/GOR.png"),
+    HomeTile("Condensate-Gas Ratio","cgr","assets/images/homeIcons/fluidRatios/CGR.webp"),
+    HomeTile("Gas-Liquid Ratio","glr","assets/images/homeIcons/fluidRatios/GLR.webp"),
+    HomeTile("Liquid-Gas Ratio","lgr","assets/images/homeIcons/fluidRatios/LGR.webp"),
+    HomeTile("Gas-Oil Ratio","gor","assets/images/homeIcons/fluidRatios/GOR.webp"),
   ]),
 
   HomeSection("Time", [
-    HomeTile("Time Large","time_large","assets/images/homeIcons/time/timeLarge.png"),
-    HomeTile("Time Small","time_small","assets/images/homeIcons/time/timeSmall.png"),
+    HomeTile("Time Large","time_large","assets/images/homeIcons/time/timeLarge.webp"),
+    HomeTile("Time Small","time_small","assets/images/homeIcons/time/timeSmall.webp"),
   ]),
 
   HomeSection("Viscosity", [
-    HomeTile("Dynamic Viscosity","viscosity_dynamic","assets/images/homeIcons/viscosity/dynamicViscosity.png"),
-    HomeTile("Kinematic Viscosity","viscosity_kinematic","assets/images/homeIcons/viscosity/kinematicViscosity.png"),
+    HomeTile("Dynamic Viscosity","viscosity_dynamic","assets/images/homeIcons/viscosity/dynamicViscosity.webp"),
+    HomeTile("Kinematic Viscosity","viscosity_kinematic","assets/images/homeIcons/viscosity/kinematicViscosity.webp"),
   ]),
 
   HomeSection("Power & Heat Transfer", [
-    HomeTile("Power","power","assets/images/homeIcons/powerHeat/Power.png"),
-    HomeTile("Heat Transfer","heat_transfer","assets/images/homeIcons/powerHeat/HeatTransfer.png"),
+    HomeTile("Power","power","assets/images/homeIcons/powerHeat/Power.webp"),
+    HomeTile("Heat Transfer","heat_transfer","assets/images/homeIcons/powerHeat/HeatTransfer.webp"),
   ]),
 
   HomeSection("Speed & Torque", [
-    HomeTile("Speed","speed","assets/images/homeIcons/speedTorque/Speed.png"),
-    HomeTile("Torque","torque","assets/images/homeIcons/speedTorque/Torque.png"),
+    HomeTile("Speed","speed","assets/images/homeIcons/speedTorque/Speed.webp"),
+    HomeTile("Torque","torque","assets/images/homeIcons/speedTorque/Torque.webp"),
   ]),
 ];
 
@@ -1039,7 +1039,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
             height: 44,
             width: 44,
             cacheWidth: 64, // 🔥 reduce more
-            cacheHeight: 64,
+
             // filterQuality: FilterQuality.low, // 🔥 important
           ),
 

@@ -124,7 +124,7 @@ class _SplashScreenState extends State<SplashScreen>
                             child: Transform.translate(
                               offset: Offset(logoSize * 0.06, logoSize * 0.10),
                               child: Image.asset(
-                                "assets/images/whiteArrow.png",
+                                "assets/images/whiteArrow.webp",
                                 width: logoSize * 0.85,
                                 height: logoSize * 0.85,
                               ),
@@ -137,7 +137,7 @@ class _SplashScreenState extends State<SplashScreen>
                             child: Transform.translate(
                               offset: Offset(-logoSize * 0.06, -logoSize * 0.10),
                               child: Image.asset(
-                                "assets/images/blueArrow.png",
+                                "assets/images/blueArrow.webp",
                                 width: logoSize * 0.85,
                                 height: logoSize * 0.85,
                               ),
