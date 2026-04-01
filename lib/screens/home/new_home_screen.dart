@@ -185,7 +185,7 @@ class _NewHomeScreenState extends State<NewHomeScreen> {
     searchCtrl.dispose();
     searchFocus.dispose();
 
-    
+
 
 
     super.dispose();
