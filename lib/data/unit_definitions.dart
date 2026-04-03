@@ -207,8 +207,8 @@ final Map<String, List<Map<String, String>>> unitDefinitions = {
     {"s":"Pa (A)", "f":"pascal absolute"},
     {"s":"psf", "f":"pound per square foot"},
     {"s":"psi", "f":"pound per square inch"},
-    {"s":"psia", "f":"pound per square inch absolute"},
-    {"s":"psig", "f":"pound per square inch gauge"},
+    {"s":"psi (A)", "f":"pound per square inch absolute"},
+    {"s":"psi (G)", "f":"pound per square inch gauge"},
     {"s":"torr", "f":"torr"},
   ],
 
